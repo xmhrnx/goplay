@@ -20,9 +20,9 @@ import (
 	"github.com/mehran9675/giode/components/titlebar"
 	"github.com/mehran9675/giode/components/toaster"
 	"github.com/mehran9675/giode/elements"
+	"github.com/mehran9675/giode/styles"
 	"github.com/mehran9675/giode/styles/properties"
 
-	"github.com/mehran9675/giode/styles"
 	"github.com/mehran9675/goplay/internal/settings"
 )
 
@@ -124,8 +124,8 @@ func (a *App) rebuildUI() {
 	u.panel.tabs.SetSelected(old.panelTab)
 	u.infoOpen = old.infoOpen
 	u.flipH, u.flipV = old.flipH, old.flipV
-	if old.dialogs.settingsOpen {
-		u.showSettings(old.dialogs.prefs.page)
+	if old.dialogs.settings.open {
+		u.dialogs.settings.show(old.dialogs.settings.page)
 	}
 	a.ui = u
 }
@@ -275,35 +275,6 @@ func (u *ui) layout(gtx layout.Context) {
 	u.trackPointer(gtx)
 }
 
-// titleBar puts the title bar on a solid strip beside the video, or on a
-// soft fade from the top edge over it.
-func (u *ui) titleBar(overlay bool) elements.Element {
-	st := styles.Styles{Width: -1, Height: -1, Background: colSurface}
-	if overlay {
-		st.Background = ""
-		st.BackgroundGradient = properties.Linear(180, "#000000b3", "#00000000")
-	}
-	return elements.Box(st, u.title)
-}
-
-func (u *ui) windowTitle() string {
-	st := &u.a.player.State
-	switch {
-	case u.a.casting():
-		return tr("{title} — casting to {device}", "title", st.Title, "device", u.a.cast.device)
-	case !st.Idle && st.Title != "":
-		return st.Title
-	}
-	return "GoPlay"
-}
-
-// titleButtons are the title bar's extra controls: the app menu.
-func (u *ui) titleButtons() []elements.Element {
-	more := ghostButton("menu", 18, tr("Menu"), func() { u.openAppMenu() })
-	u.appMenuAnchor = &anchor{el: more}
-	return []elements.Element{u.appMenuAnchor}
-}
-
 // place lays el out exactly filling r, with AbsolutePosition kept in
 // step so popups inside it open in the right spot.
 func place(gtx layout.Context, r image.Rectangle, el elements.Element) layout.Dimensions {
@@ -327,49 +298,6 @@ func zone(gtx layout.Context, r image.Rectangle, h *gesture.Hover) {
 	h.Add(gtx.Ops)
 	pass.Pop()
 	area.Pop()
-}
-
-// anchor records where an element was laid out, to open popovers from
-// it.
-type anchor struct {
-	el elements.Element
-	// pos is where it was in the last frame, exact once that frame was
-	// laid out; tracked is the probe TrackPosition keeps moving.
-	pos, tracked image.Point
-	size         image.Point
-}
-
-func (an *anchor) Layout(gtx layout.Context) layout.Dimensions {
-	// Rows place their children after laying them out; TrackPosition
-	// follows them there. Clicks handled while el lays out read the
-	// last frame's position, which is final.
-	an.pos = an.tracked
-	elements.TrackPosition(&an.tracked)
-	d := an.el.Layout(gtx)
-	an.size = d.Size
-	return d
-}
-
-// openMenuAt shows m with its top-left at p (pixels); it flips above
-// when there's no room below.
-func (u *ui) openMenuAt(m *menu.Menu, p image.Point) {
-	if u.menu != nil {
-		u.menu.Close()
-	}
-	u.menu = m
-	m.OpenAt(f32.Pt(float32(p.X), float32(p.Y)))
-	u.a.dirty = true
-}
-
-// openMenuOver opens m from a control: above it when the control is in
-// the bottom half of the window, below otherwise.
-func (u *ui) openMenuOver(m *menu.Menu, an *anchor) {
-	p := an.pos
-	if p.Y > u.fb.Y/2 {
-		u.openMenuAt(m, image.Pt(p.X, p.Y-u.dp(6)))
-		return
-	}
-	u.openMenuAt(m, image.Pt(p.X, p.Y+an.size.Y+u.dp(6)))
 }
 
 // modalOpen reports whether a dialog takes the keyboard.

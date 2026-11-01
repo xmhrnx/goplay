@@ -141,3 +141,13 @@ func uiFonts() []font.FontFace {
 	}
 	return append(faces, gofont.Collection()...)
 }
+
+// scrollStyles fill a scrolling page and use goplay's scroll bar.
+func scrollStyles() styles.Styles {
+	return styles.Styles{Width: -1, Height: -1, ScrollBar: scrollBar()}
+}
+
+// clearOfBar keeps a scrolling page's content clear of its scroll bar.
+func clearOfBar(el elements.Element) elements.Element {
+	return elements.Box(styles.Styles{Width: -1, Padding: properties.Inset{Right: scrollGap}}, el)
+}

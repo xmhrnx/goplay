@@ -33,7 +33,7 @@ func (a *App) registerCommands() {
 		act("open", "Open File…", "File", k("Mod+O"), a.openFileDialog),
 		act("open_folder", "Open Folder…", "File", k("Mod+Shift+O"), a.openFolderDialog),
 		act("open_disc", "Open DVD or Blu-ray…", "File", nil, a.openDisc),
-		act("open_url", "Open URL…", "File", k("Mod+U"), func() { a.ui.showOpenURL() }),
+		act("open_url", "Open URL…", "File", k("Mod+U"), func() { a.ui.dialogs.url.show() }),
 		act("network_media", "Media on Your Network…", "File", nil, func() { a.ui.dialogs.net.show() }),
 		act("paste", "Open Link or File from Clipboard", "File", k("Mod+V"), a.openClipboard),
 		act("add_files", "Add Files to Playlist…", "File", nil, a.addFilesDialog),
@@ -53,7 +53,7 @@ func (a *App) registerCommands() {
 		when(repeat(act("seek_forward_large", "Forward 1 Minute", "Playback", k("Shift+Right"), func() { a.seekBy(a.seekStep(true)) })), hasDuration),
 		when(repeat(act("frame_back", "Previous Frame", "Playback", k(","), func() { p.FrameStep(true) })), hasMedia),
 		when(repeat(act("frame_forward", "Next Frame", "Playback", k("."), func() { p.FrameStep(false) })), hasMedia),
-		when(act("jump_to", "Go to Time…", "Playback", k("Mod+G"), func() { a.ui.showJumpTo() }), hasDuration),
+		when(act("jump_to", "Go to Time…", "Playback", k("Mod+G"), func() { a.ui.dialogs.jump.show() }), hasDuration),
 		when(act("restart", "Start Over", "Playback", k("Home"), func() { a.seekTo(0) }), hasDuration),
 		when(act("speed_down", "Slower", "Playback", k("[", "Shift+,"), func() { a.stepSpeed(-1) }), hasMedia),
 		when(act("speed_up", "Faster", "Playback", k("]", "Shift+."), func() { a.stepSpeed(1) }), hasMedia),
@@ -120,19 +120,19 @@ func (a *App) registerCommands() {
 		when(act("vr_reset", "Reset 360° View", "3D & VR", k("Mod+Shift+0"), a.resetVRView), a.vrActive),
 
 		// Cast
-		toggle(act("cast", "Cast to TV or Speaker…", "Cast", k("Mod+Shift+C"), func() { a.ui.showCast() }), a.casting),
+		toggle(act("cast", "Cast to TV or Speaker…", "Cast", k("Mod+Shift+C"), func() { a.ui.dialogs.cast.show() }), a.casting),
 		when(act("cast_stop", "Stop Casting", "Cast", nil, a.stopCasting), a.casting),
 
 		// View
 		toggle(act("playlist", "Playlist", "View", k("Mod+L"), func() { a.ui.togglePanel(panelPlaylist) }), func() bool { return a.ui.panelOpen && a.ui.panelTab == panelPlaylist }),
 		when(toggle(act("chapters", "Chapters", "View", nil, func() { a.ui.togglePanel(panelChapters) }), func() bool { return a.ui.panelOpen && a.ui.panelTab == panelChapters }),
 			func() bool { return len(st.Chapters) > 0 }),
-		act("palette", "Command Palette…", "View", k("Mod+K", "Mod+Shift+P"), func() { a.ui.showPalette() }),
-		act("settings", "Settings…", "View", k("Mod+,"), func() { a.ui.showSettings("") }),
-		act("shortcuts", "Keyboard Shortcuts", "View", k("Shift+/", "F1"), func() { a.ui.showSettings("Shortcuts") }),
-		act("log", "mpv Log", "View", nil, func() { a.ui.showLog() }),
+		act("palette", "Command Palette…", "View", k("Mod+K", "Mod+Shift+P"), func() { a.ui.dialogs.palette.show() }),
+		act("settings", "Settings…", "View", k("Mod+,"), func() { a.ui.dialogs.settings.show("") }),
+		act("shortcuts", "Keyboard Shortcuts", "View", k("Shift+/", "F1"), func() { a.ui.dialogs.settings.show("Shortcuts") }),
+		act("log", "mpv Log", "View", nil, func() { a.ui.dialogs.log.show() }),
 		act("config_folder", "Open Configuration Folder", "View", nil, a.openConfigFolder),
-		act("about", "About GoPlay", "View", nil, func() { a.ui.showAbout() }),
+		act("about", "About GoPlay", "View", nil, func() { a.ui.dialogs.about.show() }),
 	)
 
 	// 1 to 9 jump to 10% to 90%, 0 to the start.

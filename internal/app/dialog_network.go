@@ -26,9 +26,8 @@ import (
 // netMedia browses the media servers on the network (DLNA/UPnP: a NAS,
 // Plex, Jellyfin, Windows' media sharing) and plays what they share.
 type netMedia struct {
+	modal
 	u    *ui
-	open bool
-	dlg  *dialog.Dialog
 	list *virtuallist.List
 
 	scanMu     sync.Mutex
@@ -308,7 +307,7 @@ func (n *netMedia) serversContent() elements.Element {
 	if n.scanning {
 		rows = append(rows, busy(tr("Looking for media servers…")))
 	} else if len(n.servers) == 0 {
-		rows = append(rows, note(tr("No media servers found. Make sure sharing is on and they're on the same network as this computer, " +
+		rows = append(rows, note(tr("No media servers found. Make sure sharing is on and they're on the same network as this computer, "+
 			"or add a server's address below.")))
 	}
 	for _, addr := range n.silent {
