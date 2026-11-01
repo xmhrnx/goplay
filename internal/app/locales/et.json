@@ -516,5 +516,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "Dekodeerib graafikakaardil: palju vähem protsessori koormust ja energiat. Lülita välja, kui pildil on vigu.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Mälu ette puhverdamiseks. Suurem aitab aeglastes võrkudes, väiksem säästab mälu.",
  "What the log window shows.": "Mida logiaken näitab.",
- "One per line, as name=value. Applied after everything above.": "Üks rea kohta kujul nimi=väärtus. Rakendatakse pärast kõike ülaltoodut."
+ "One per line, as name=value. Applied after everything above.": "Üks rea kohta kujul nimi=väärtus. Rakendatakse pärast kõike ülaltoodut.",
+ "Open DVD or Blu-ray…": "Ava DVD või Blu-ray…",
+ "Open DVD or Blu-ray": "Ava DVD või Blu-ray",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "Üheski draivis pole DVD-d ega Blu-rayd. Vali plaadi kaust.",
+ "{name} isn't a DVD or Blu-ray": "{name} ei ole DVD ega Blu-ray",
+ "DVDs and Blu-rays can't be cast": "DVD-sid ja Blu-raysid ei saa edastada",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Enamik müüdavaid Blu-raysid on krüptitud ja vajavad esitamiseks libaacs-i ja võtmete andmebaasi.",
+ "Titles": "Pealkirjad",
+ "Title {number}": "Pealkiri {number}",
+ "Editions": "Väljaanded",
+ "Edition {number}": "Väljaanne {number}"
 }

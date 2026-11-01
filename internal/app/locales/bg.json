@@ -516,5 +516,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "Декодира на видеокартата: много по-малко натоварване на процесора и енергия. Изключете, ако картината има дефекти.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Памет за буфериране напред. По-голяма помага при бавни мрежи; по-малка пести памет.",
  "What the log window shows.": "Какво показва прозорецът на дневника.",
- "One per line, as name=value. Applied after everything above.": "По една на ред, като име=стойност. Прилагат се след всичко по-горе."
+ "One per line, as name=value. Applied after everything above.": "По една на ред, като име=стойност. Прилагат се след всичко по-горе.",
+ "Open DVD or Blu-ray…": "Отваряне на DVD или Blu-ray…",
+ "Open DVD or Blu-ray": "Отваряне на DVD или Blu-ray",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "Няма DVD или Blu-ray в устройство. Изберете папката на диска.",
+ "{name} isn't a DVD or Blu-ray": "{name} не е DVD или Blu-ray",
+ "DVDs and Blu-rays can't be cast": "DVD и Blu-ray дисковете не могат да се предават",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Повечето продавани Blu-ray дискове са шифровани и за възпроизвеждането им са нужни libaacs и база данни с ключове.",
+ "Titles": "Заглавия",
+ "Title {number}": "Заглавие {number}",
+ "Editions": "Издания",
+ "Edition {number}": "Издание {number}"
 }

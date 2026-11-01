@@ -516,5 +516,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "A videokártyán dekódol: sokkal kevesebb processzorterhelés és energia. Kapcsold ki, ha a kép hibás.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Memória az előre puffereléshez. Nagyobb segít lassú hálózaton, kisebb memóriát takarít meg.",
  "What the log window shows.": "Mit mutat a naplóablak.",
- "One per line, as name=value. Applied after everything above.": "Soronként egy, név=érték alakban. A fentiek után lép érvénybe."
+ "One per line, as name=value. Applied after everything above.": "Soronként egy, név=érték alakban. A fentiek után lép érvénybe.",
+ "Open DVD or Blu-ray…": "DVD vagy Blu-ray megnyitása…",
+ "Open DVD or Blu-ray": "DVD vagy Blu-ray megnyitása",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "Egyik meghajtóban sincs DVD vagy Blu-ray. Válaszd ki egy lemez mappáját.",
+ "{name} isn't a DVD or Blu-ray": "{name} nem DVD vagy Blu-ray",
+ "DVDs and Blu-rays can't be cast": "DVD és Blu-ray lemez nem küldhető át",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "A legtöbb kereskedelmi Blu-ray titkosított, lejátszásához libaacs és kulcsadatbázis kell.",
+ "Titles": "Címek",
+ "Title {number}": "{number}. cím",
+ "Editions": "Változatok",
+ "Edition {number}": "{number}. változat"
 }

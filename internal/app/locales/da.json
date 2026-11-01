@@ -516,5 +516,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "Afkoder på grafikkortet: meget mindre CPU og strøm. Slå fra, hvis billedet har fejl.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Hukommelse til buffer fremad. Større hjælper på langsomme netværk; mindre sparer hukommelse.",
  "What the log window shows.": "Hvad logvinduet viser.",
- "One per line, as name=value. Applied after everything above.": "Én pr. linje, som navn=værdi. Anvendes efter alt ovenfor."
+ "One per line, as name=value. Applied after everything above.": "Én pr. linje, som navn=værdi. Anvendes efter alt ovenfor.",
+ "Open DVD or Blu-ray…": "Åbn dvd eller Blu-ray …",
+ "Open DVD or Blu-ray": "Åbn dvd eller Blu-ray",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "Der er ingen dvd eller Blu-ray i et drev. Vælg en disks mappe.",
+ "{name} isn't a DVD or Blu-ray": "{name} er ikke en dvd eller Blu-ray",
+ "DVDs and Blu-rays can't be cast": "Dvd'er og Blu-rays kan ikke castes",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "De fleste solgte Blu-rays er krypterede og kræver libaacs og en nøgledatabase for at kunne afspilles.",
+ "Titles": "Titler",
+ "Title {number}": "Titel {number}",
+ "Editions": "Udgaver",
+ "Edition {number}": "Udgave {number}"
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/mehran9675/goplay/internal/cast"
+	"github.com/mehran9675/goplay/internal/library"
 	"github.com/mehran9675/goplay/internal/player"
 	"github.com/mehran9675/goplay/internal/settings"
 )
@@ -69,6 +70,10 @@ func (a *App) castTo(d cast.Device) {
 	st := &a.player.State
 	if st.Idle {
 		a.toast(tr("Open a video first, then cast it"))
+		return
+	}
+	if library.IsDiscURL(st.Path) {
+		a.toast(tr("DVDs and Blu-rays can't be cast"))
 		return
 	}
 	a.stopCastScan()

@@ -519,5 +519,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "Dekóduje na grafické kartě: mnohem méně CPU a energie. Vypněte, pokud obraz vykazuje chyby.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Paměť pro načítání dopředu. Větší pomáhá na pomalých sítích; menší šetří paměť.",
  "What the log window shows.": "Co zobrazuje okno protokolu.",
- "One per line, as name=value. Applied after everything above.": "Jedna na řádek ve tvaru název=hodnota. Použijí se po všem výše uvedeném."
+ "One per line, as name=value. Applied after everything above.": "Jedna na řádek ve tvaru název=hodnota. Použijí se po všem výše uvedeném.",
+ "Open DVD or Blu-ray…": "Otevřít DVD nebo Blu-ray…",
+ "Open DVD or Blu-ray": "Otevřít DVD nebo Blu-ray",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "V žádné mechanice není DVD ani Blu-ray. Vyberte složku disku.",
+ "{name} isn't a DVD or Blu-ray": "{name} není DVD ani Blu-ray",
+ "DVDs and Blu-rays can't be cast": "DVD a Blu-ray nelze odesílat",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Většina prodávaných disků Blu-ray je šifrovaná a k přehrání potřebuje libaacs a databázi klíčů.",
+ "Titles": "Tituly",
+ "Title {number}": "Titul {number}",
+ "Editions": "Edice",
+ "Edition {number}": "Edice {number}"
 }

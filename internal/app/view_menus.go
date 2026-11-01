@@ -8,6 +8,7 @@ import (
 
 	"github.com/mehran9675/giode/styles"
 	"github.com/mehran9675/giode/styles/properties"
+	"github.com/mehran9675/goplay/internal/library"
 	"github.com/mehran9675/goplay/internal/player"
 	"github.com/mehran9675/goplay/internal/settings"
 )
@@ -73,7 +74,7 @@ func (u *ui) contextMenu() *menu.Menu {
 	st := &a.player.State
 	m := newMenu()
 	if st.Idle {
-		u.items(m, "open", "open_folder", "open_url", "network_media", "paste")
+		u.items(m, "open", "open_folder", "open_disc", "open_url", "network_media", "paste")
 		m.SubMenu(tr("Open Recent"), u.recentMenu())
 		m.Separator()
 		u.items(m, "settings", "shortcuts", "palette", "-", "about", "quit")
@@ -94,7 +95,7 @@ func (u *ui) contextMenu() *menu.Menu {
 
 func (u *ui) openMenu() *menu.Menu {
 	m := newMenu()
-	u.items(m, "open", "open_folder", "open_url", "network_media", "paste", "-", "add_files", "load_subtitle", "load_audio")
+	u.items(m, "open", "open_folder", "open_disc", "open_url", "network_media", "paste", "-", "add_files", "load_subtitle", "load_audio")
 	m.Separator()
 	m.SubMenu(tr("Recent"), u.recentMenu())
 	u.items(m, "-", "reveal", "copy_path", "close_media")
@@ -126,6 +127,13 @@ func (u *ui) playbackMenu() *menu.Menu {
 	st := &a.player.State
 	m := newMenu()
 	m.SubMenu(tr("Speed"), u.speedMenu())
+	if len(st.Editions) > 1 {
+		label := tr("Editions")
+		if library.IsDiscURL(st.Path) {
+			label = tr("Titles")
+		}
+		m.SubMenu(label, u.editionMenu())
+	}
 	if len(st.Chapters) > 0 {
 		m.SubMenu(tr("Chapters"), u.chapterMenu())
 	}
@@ -146,6 +154,27 @@ func (u *ui) chapterMenu() *menu.Menu {
 			title = tr("Chapter {number}", "number", i+1)
 		}
 		radio(m, player.FormatTime(c.Time)+"   "+ellipsize(title, 40), func() bool { return i == st.Chapter }, func() { a.player.SetChapter(i) })
+	}
+	return m
+}
+
+// editionMenu lists a disc's titles, or a file's editions.
+func (u *ui) editionMenu() *menu.Menu {
+	a := u.a
+	st := &a.player.State
+	disc := library.IsDiscURL(st.Path)
+	m := newMenu()
+	for i, e := range st.Editions {
+		id := e.ID
+		title := e.Title
+		switch {
+		case title != "":
+		case disc:
+			title = tr("Title {number}", "number", i+1)
+		default:
+			title = tr("Edition {number}", "number", i+1)
+		}
+		radio(m, ellipsize(title, 48), func() bool { return id == st.Edition }, func() { a.player.SetEdition(id) })
 	}
 	return m
 }

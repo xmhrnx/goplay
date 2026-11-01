@@ -95,6 +95,13 @@ type Chapter struct {
 	Time  float64 `json:"time"`
 }
 
+// Edition is one of the file's editions: a Matroska file's alternative
+// cuts, or a DVD's or Blu-ray's titles.
+type Edition struct {
+	ID    int    `json:"id"`
+	Title string `json:"title"`
+}
+
 // PlaylistEntry is one entry of mpv's playlist.
 type PlaylistEntry struct {
 	Filename string `json:"filename"`
@@ -135,6 +142,8 @@ type State struct {
 	Tracks       []Track
 	Chapters     []Chapter
 	Chapter      int // -1 before the first chapter or without chapters
+	Editions     []Edition
+	Edition      int // the playing edition's ID
 	Playlist     []PlaylistEntry
 	PlaylistPos  int
 	VideoW       int
@@ -245,6 +254,11 @@ var observed = []struct {
 		p.h.JSON("chapter-list", &p.State.Chapters)
 	}},
 	{"chapter", mpv.FormatInt64, func(p *Player, ev *mpv.Event) { p.State.Chapter = intOr(ev, -1) }},
+	{"edition-list", mpv.FormatNone, func(p *Player, ev *mpv.Event) {
+		p.State.Editions = nil
+		p.h.JSON("edition-list", &p.State.Editions)
+	}},
+	{"current-edition", mpv.FormatInt64, func(p *Player, ev *mpv.Event) { p.State.Edition = intOr(ev, 0) }},
 	{"playlist", mpv.FormatNone, func(p *Player, ev *mpv.Event) {
 		p.State.Playlist = nil
 		p.h.JSON("playlist", &p.State.Playlist)

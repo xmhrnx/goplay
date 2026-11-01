@@ -519,5 +519,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "Decodează pe placa video: mult mai puțin procesor și energie. Dezactivează dacă imaginea are defecte.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Memorie pentru încărcare în avans. Mai mare ajută rețelele lente; mai mică economisește memorie.",
  "What the log window shows.": "Ce arată fereastra jurnalului.",
- "One per line, as name=value. Applied after everything above.": "Câte una pe rând, ca nume=valoare. Se aplică după tot ce este mai sus."
+ "One per line, as name=value. Applied after everything above.": "Câte una pe rând, ca nume=valoare. Se aplică după tot ce este mai sus.",
+ "Open DVD or Blu-ray…": "Deschide DVD sau Blu-ray…",
+ "Open DVD or Blu-ray": "Deschide DVD sau Blu-ray",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "Nu există niciun DVD sau Blu-ray într-o unitate. Alege dosarul unui disc.",
+ "{name} isn't a DVD or Blu-ray": "{name} nu este un DVD sau Blu-ray",
+ "DVDs and Blu-rays can't be cast": "DVD-urile și Blu-ray-urile nu pot fi transmise",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Majoritatea Blu-ray-urilor din comerț sunt criptate și au nevoie de libaacs și de o bază de date cu chei pentru a fi redate.",
+ "Titles": "Titluri",
+ "Title {number}": "Titlul {number}",
+ "Editions": "Ediții",
+ "Edition {number}": "Ediția {number}"
 }

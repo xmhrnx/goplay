@@ -516,5 +516,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "Αποκωδικοποιεί στην κάρτα γραφικών: πολύ λιγότερη CPU και ενέργεια. Απενεργοποιήστε το αν η εικόνα έχει σφάλματα.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Μνήμη για προφόρτωση. Μεγαλύτερη βοηθά σε αργά δίκτυα· μικρότερη εξοικονομεί μνήμη.",
  "What the log window shows.": "Τι δείχνει το παράθυρο καταγραφής.",
- "One per line, as name=value. Applied after everything above.": "Μία ανά γραμμή, ως όνομα=τιμή. Εφαρμόζονται μετά από όλα τα παραπάνω."
+ "One per line, as name=value. Applied after everything above.": "Μία ανά γραμμή, ως όνομα=τιμή. Εφαρμόζονται μετά από όλα τα παραπάνω.",
+ "Open DVD or Blu-ray…": "Άνοιγμα DVD ή Blu-ray…",
+ "Open DVD or Blu-ray": "Άνοιγμα DVD ή Blu-ray",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "Δεν υπάρχει DVD ή Blu-ray σε μονάδα δίσκου. Επιλέξτε τον φάκελο ενός δίσκου.",
+ "{name} isn't a DVD or Blu-ray": "Το {name} δεν είναι DVD ή Blu-ray",
+ "DVDs and Blu-rays can't be cast": "Τα DVD και τα Blu-ray δεν μπορούν να μεταδοθούν",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Τα περισσότερα Blu-ray του εμπορίου είναι κρυπτογραφημένα και χρειάζονται το libaacs και μια βάση δεδομένων κλειδιών για αναπαραγωγή.",
+ "Titles": "Τίτλοι",
+ "Title {number}": "Τίτλος {number}",
+ "Editions": "Εκδόσεις",
+ "Edition {number}": "Έκδοση {number}"
 }

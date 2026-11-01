@@ -522,5 +522,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "Dekoduoja vaizdo plokštėje: daug mažiau procesoriaus apkrovos ir energijos. Išjunkite, jei vaizde matyti trikdžių.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Atmintis buferizuoti iš anksto. Didesnė padeda lėtuose tinkluose, mažesnė taupo atmintį.",
  "What the log window shows.": "Ką rodo žurnalo langas.",
- "One per line, as name=value. Applied after everything above.": "Po vieną eilutėje, kaip pavadinimas=reikšmė. Taikomos po visų aukščiau esančių."
+ "One per line, as name=value. Applied after everything above.": "Po vieną eilutėje, kaip pavadinimas=reikšmė. Taikomos po visų aukščiau esančių.",
+ "Open DVD or Blu-ray…": "Atidaryti DVD arba „Blu-ray“…",
+ "Open DVD or Blu-ray": "Atidaryti DVD arba „Blu-ray“",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "Nė viename įrenginyje nėra DVD ar „Blu-ray“ disko. Pasirinkite disko aplanką.",
+ "{name} isn't a DVD or Blu-ray": "{name} nėra DVD ar „Blu-ray“ diskas",
+ "DVDs and Blu-rays can't be cast": "DVD ir „Blu-ray“ diskų transliuoti negalima",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Dauguma parduodamų „Blu-ray“ diskų yra šifruoti, jiems leisti reikia „libaacs“ ir raktų duomenų bazės.",
+ "Titles": "Pavadinimai",
+ "Title {number}": "Pavadinimas {number}",
+ "Editions": "Leidimai",
+ "Edition {number}": "Leidimas {number}"
 }

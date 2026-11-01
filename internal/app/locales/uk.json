@@ -522,5 +522,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "Декодує на відеокарті: набагато менше навантаження на процесор і енергії. Вимкніть, якщо зображення має збої.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Пам'ять для випереджальної буферизації. Більше — краще для повільних мереж, менше — економить пам'ять.",
  "What the log window shows.": "Що показує вікно журналу.",
- "One per line, as name=value. Applied after everything above.": "По одному в рядку, у вигляді назва=значення. Застосовуються після всього, що вище."
+ "One per line, as name=value. Applied after everything above.": "По одному в рядку, у вигляді назва=значення. Застосовуються після всього, що вище.",
+ "Open DVD or Blu-ray…": "Відкрити DVD або Blu-ray…",
+ "Open DVD or Blu-ray": "Відкрити DVD або Blu-ray",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "У жодному дисководі немає DVD чи Blu-ray. Виберіть теку диска.",
+ "{name} isn't a DVD or Blu-ray": "{name} — не DVD і не Blu-ray",
+ "DVDs and Blu-rays can't be cast": "DVD і Blu-ray не можна транслювати",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Більшість дисків Blu-ray у продажу зашифровані, для відтворення потрібні libaacs і база ключів.",
+ "Titles": "Розділи",
+ "Title {number}": "Розділ {number}",
+ "Editions": "Видання",
+ "Edition {number}": "Видання {number}"
 }

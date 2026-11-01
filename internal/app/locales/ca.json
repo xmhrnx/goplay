@@ -516,5 +516,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "Descodifica a la targeta gràfica: molta menys CPU i energia. Desactiva-ho si la imatge mostra errors.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Memòria per carregar per endavant. Més gran ajuda amb xarxes lentes; més petita estalvia memòria.",
  "What the log window shows.": "Què mostra la finestra del registre.",
- "One per line, as name=value. Applied after everything above.": "Una per línia, com a nom=valor. S'apliquen després de tot l'anterior."
+ "One per line, as name=value. Applied after everything above.": "Una per línia, com a nom=valor. S'apliquen després de tot l'anterior.",
+ "Open DVD or Blu-ray…": "Obre un DVD o Blu-ray…",
+ "Open DVD or Blu-ray": "Obre un DVD o Blu-ray",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "No hi ha cap DVD ni Blu-ray en cap unitat. Tria la carpeta d'un disc.",
+ "{name} isn't a DVD or Blu-ray": "{name} no és un DVD ni un Blu-ray",
+ "DVDs and Blu-rays can't be cast": "Els DVD i els Blu-ray no es poden enviar",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "La majoria de Blu-ray que es venen estan xifrats i necessiten libaacs i una base de dades de claus per reproduir-se.",
+ "Titles": "Títols",
+ "Title {number}": "Títol {number}",
+ "Editions": "Edicions",
+ "Edition {number}": "Edició {number}"
 }

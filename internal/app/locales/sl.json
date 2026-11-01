@@ -522,5 +522,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "Dekodira na grafični kartici: veliko manj obremenitve CPE in energije. Izklopite, če slika kaže napake.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Pomnilnik za medpomnjenje vnaprej. Večji pomaga pri počasnih omrežjih, manjši varčuje s pomnilnikom.",
  "What the log window shows.": "Kaj prikazuje okno dnevnika.",
- "One per line, as name=value. Applied after everything above.": "Ena na vrstico, kot ime=vrednost. Uporabijo se po vsem zgoraj."
+ "One per line, as name=value. Applied after everything above.": "Ena na vrstico, kot ime=vrednost. Uporabijo se po vsem zgoraj.",
+ "Open DVD or Blu-ray…": "Odpri DVD ali Blu-ray …",
+ "Open DVD or Blu-ray": "Odpri DVD ali Blu-ray",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "V nobenem pogonu ni DVD-ja ali Blu-raya. Izberite mapo diska.",
+ "{name} isn't a DVD or Blu-ray": "{name} ni DVD ali Blu-ray",
+ "DVDs and Blu-rays can't be cast": "DVD-jev in Blu-rayev ni mogoče predvajati na drugi napravi",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Večina prodajanih Blu-rayev je šifriranih in za predvajanje potrebujejo libaacs in zbirko ključev.",
+ "Titles": "Naslovi",
+ "Title {number}": "Naslov {number}",
+ "Editions": "Izdaje",
+ "Edition {number}": "Izdaja {number}"
 }

@@ -19,6 +19,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mehran9675/goplay/internal/library"
 	"github.com/mehran9675/goplay/internal/mpv"
 )
 
@@ -237,6 +238,9 @@ func (p *Player) Open(items []string, appendToPlaylist bool) error {
 	mode := "replace"
 	if appendToPlaylist {
 		mode = "append-play"
+	} else if e, _ := p.h.String("options/edition"); e != "auto" {
+		// A title picked with SetEdition was for the last disc.
+		p.h.SetString("options/edition", "auto")
 	}
 	for i, it := range items {
 		if err := p.h.Command("loadfile", it, mode); err != nil {
@@ -262,10 +266,14 @@ func (p *Player) Name(url, title string) {
 }
 
 // titleOf is the title to show for path: the name given with Name, or
-// mpv's media-title.
+// mpv's media-title. A disc without a title of its own is named after
+// its folder, image or drive; mpv would show the end of its address.
 func (p *Player) titleOf(path, mediaTitle string) string {
 	if t := p.titles[path]; t != "" {
 		return t
+	}
+	if library.IsDiscURL(path) && (mediaTitle == "" || strings.Contains(path, mediaTitle)) {
+		return library.DiscName(path)
 	}
 	return mediaTitle
 }
@@ -326,6 +334,12 @@ func (p *Player) ChapterBy(d int) { p.h.Command("add", "chapter", strconv.Itoa(d
 
 // SetChapter jumps to chapter i.
 func (p *Player) SetChapter(i int) { p.h.SetString("chapter", strconv.Itoa(i)) }
+
+// SetEdition plays the edition (a disc's title) with the given ID,
+// reopening the file. It stays chosen until something else is opened
+// (unlike a track, an edition can't be set for one file: reopening ends
+// the file, which would undo it).
+func (p *Player) SetEdition(id int) { p.h.SetString("edition", strconv.Itoa(id)) }
 
 // A-B loop and repeat.
 

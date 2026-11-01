@@ -24,6 +24,7 @@ var MediaExts = map[string]bool{
 	".mpeg": true, ".ogv": true, ".3gp": true, ".vob": true, ".divx": true, ".rmvb": true,
 	".mp3": true, ".flac": true, ".wav": true, ".ogg": true, ".oga": true, ".opus": true,
 	".m4a": true, ".aac": true, ".mka": true, ".wma": true, ".alac": true, ".ape": true,
+	".iso": true,
 }
 
 // SubtitleExts are subtitle file extensions.
@@ -72,12 +73,29 @@ func Folder(dir string) ([]string, error) {
 }
 
 // Expand turns what the user opened - files, folders, URLs - into a
-// playlist, expanding folders to their media files. With queueFolder, a
-// single file opened alone brings the rest of its folder along; start is
-// then its index in the list.
+// playlist, expanding folders to their media files and making DVDs and
+// Blu-rays disc addresses (see Disc). With queueFolder, a single file
+// opened alone brings the rest of its folder along; start is then its
+// index in the list.
 func Expand(items []string, queueFolder bool) (list []string, start int) {
+	list, start = expand(items, queueFolder)
+	for i, it := range list {
+		if !IsURL(it) {
+			if k, root := Disc(it); k != NoDisc {
+				list[i] = DiscURL(k, root)
+			}
+		}
+	}
+	return list, start
+}
+
+func expand(items []string, queueFolder bool) (list []string, start int) {
 	for _, it := range items {
 		if IsURL(it) {
+			list = append(list, it)
+			continue
+		}
+		if k, _ := Disc(it); k != NoDisc {
 			list = append(list, it)
 			continue
 		}
@@ -89,7 +107,7 @@ func Expand(items []string, queueFolder bool) (list []string, start int) {
 		}
 		list = append(list, it)
 	}
-	if queueFolder && len(items) == 1 && len(list) == 1 && !IsURL(list[0]) {
+	if queueFolder && len(items) == 1 && len(list) == 1 && !IsURL(list[0]) && !isDir(list[0]) {
 		if files, err := Folder(filepath.Dir(list[0])); err == nil && len(files) > 1 {
 			for i, f := range files {
 				if sameFile(f, list[0]) {
@@ -99,6 +117,11 @@ func Expand(items []string, queueFolder bool) (list []string, start int) {
 		}
 	}
 	return list, 0
+}
+
+func isDir(path string) bool {
+	fi, err := os.Stat(path)
+	return err == nil && fi.IsDir()
 }
 
 func sameFile(a, b string) bool {
@@ -165,6 +188,9 @@ func (r Recent) Progress() float64 {
 func (r Recent) Name() string {
 	if r.Title != "" {
 		return r.Title
+	}
+	if IsDiscURL(r.Path) {
+		return DiscName(r.Path)
 	}
 	if IsURL(r.Path) {
 		return r.Path

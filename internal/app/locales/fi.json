@@ -516,5 +516,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "Dekoodaa näytönohjaimella: paljon vähemmän suoritinkuormaa ja virtaa. Poista käytöstä, jos kuvassa on häiriöitä.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Muisti etukäteen puskurointiin. Suurempi auttaa hitaissa verkoissa, pienempi säästää muistia.",
  "What the log window shows.": "Mitä loki-ikkuna näyttää.",
- "One per line, as name=value. Applied after everything above.": "Yksi riville muodossa nimi=arvo. Otetaan käyttöön kaiken yllä olevan jälkeen."
+ "One per line, as name=value. Applied after everything above.": "Yksi riville muodossa nimi=arvo. Otetaan käyttöön kaiken yllä olevan jälkeen.",
+ "Open DVD or Blu-ray…": "Avaa DVD tai Blu-ray…",
+ "Open DVD or Blu-ray": "Avaa DVD tai Blu-ray",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "Missään asemassa ei ole DVD- tai Blu-ray-levyä. Valitse levyn kansio.",
+ "{name} isn't a DVD or Blu-ray": "{name} ei ole DVD- tai Blu-ray-levy",
+ "DVDs and Blu-rays can't be cast": "DVD- ja Blu-ray-levyjä ei voi suoratoistaa",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Useimmat myytävät Blu-ray-levyt on salattu, ja niiden toistoon tarvitaan libaacs ja avaintietokanta.",
+ "Titles": "Nimikkeet",
+ "Title {number}": "Nimike {number}",
+ "Editions": "Versiot",
+ "Edition {number}": "Versio {number}"
 }

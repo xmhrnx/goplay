@@ -519,5 +519,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "Dekodē videokartē: daudz mazāka procesora slodze un enerģija. Izslēdziet, ja attēlā redzami traucējumi.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Atmiņa buferēšanai uz priekšu. Lielāka palīdz lēnos tīklos; mazāka taupa atmiņu.",
  "What the log window shows.": "Ko rāda žurnāla logs.",
- "One per line, as name=value. Applied after everything above.": "Pa vienai rindā, kā nosaukums=vērtība. Tiek lietotas pēc visa augstāk minētā."
+ "One per line, as name=value. Applied after everything above.": "Pa vienai rindā, kā nosaukums=vērtība. Tiek lietotas pēc visa augstāk minētā.",
+ "Open DVD or Blu-ray…": "Atvērt DVD vai Blu-ray…",
+ "Open DVD or Blu-ray": "Atvērt DVD vai Blu-ray",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "Nevienā diskdzinī nav DVD vai Blu-ray. Izvēlieties diska mapi.",
+ "{name} isn't a DVD or Blu-ray": "{name} nav DVD vai Blu-ray",
+ "DVDs and Blu-rays can't be cast": "DVD un Blu-ray nevar pārraidīt",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Lielākā daļa pārdošanā esošo Blu-ray ir šifrēti, un to atskaņošanai vajag libaacs un atslēgu datubāzi.",
+ "Titles": "Nosaukumi",
+ "Title {number}": "Nosaukums {number}",
+ "Editions": "Izdevumi",
+ "Edition {number}": "Izdevums {number}"
 }

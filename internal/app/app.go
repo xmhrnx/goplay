@@ -25,6 +25,7 @@ import (
 	"runtime"
 	"runtime/debug"
 	"strconv"
+	"strings"
 	"sync"
 	"sync/atomic"
 
@@ -510,13 +511,22 @@ func (a *App) fileEnded(reason int, err error) {
 		a.Post(func() { a.runCommands(cmds) })
 	}
 	if reason == mpv.EndError {
-		name := filepath.Base(a.player.State.Path)
+		path := a.player.State.Path
+		name := filepath.Base(path)
+		if library.IsDiscURL(path) {
+			name = library.DiscName(path)
+		}
 		if name == "." || name == "" {
 			name = tr("the file")
 		}
 		msg := tr("Couldn't play {name}", "name", name)
 		if err != nil {
 			msg += ": " + err.Error()
+		}
+		if strings.HasPrefix(path, "bd://") {
+			// mpv reads Blu-rays with libbluray, which can't decrypt one
+			// by itself.
+			msg += ". " + tr("Most Blu-rays sold are encrypted and need libaacs and a key database to play.")
 		}
 		a.toastError(msg)
 	}

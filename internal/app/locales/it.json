@@ -516,5 +516,15 @@
  "Decodes on the graphics card: much less CPU and power. Turn off if the picture shows glitches.": "Decodifica sulla scheda video: molta meno CPU ed energia. Disattivalo se l’immagine mostra difetti.",
  "Memory for buffering ahead. Larger helps slow networks; smaller saves memory.": "Memoria per il buffering anticipato. Più grande aiuta le reti lente; più piccola risparmia memoria.",
  "What the log window shows.": "Cosa mostra la finestra del log.",
- "One per line, as name=value. Applied after everything above.": "Una per riga, come nome=valore. Applicate dopo tutto quanto sopra."
+ "One per line, as name=value. Applied after everything above.": "Una per riga, come nome=valore. Applicate dopo tutto quanto sopra.",
+ "Open DVD or Blu-ray…": "Apri DVD o Blu-ray…",
+ "Open DVD or Blu-ray": "Apri DVD o Blu-ray",
+ "There's no DVD or Blu-ray in a drive. Pick a disc's folder.": "Non c’è nessun DVD o Blu-ray in un’unità. Scegli la cartella di un disco.",
+ "{name} isn't a DVD or Blu-ray": "{name} non è un DVD né un Blu-ray",
+ "DVDs and Blu-rays can't be cast": "DVD e Blu-ray non possono essere trasmessi",
+ "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "La maggior parte dei Blu-ray in commercio è cifrata e per la riproduzione servono libaacs e un database di chiavi.",
+ "Titles": "Titoli",
+ "Title {number}": "Titolo {number}",
+ "Editions": "Edizioni",
+ "Edition {number}": "Edizione {number}"
 }

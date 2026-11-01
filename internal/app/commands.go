@@ -32,6 +32,7 @@ func (a *App) registerCommands() {
 		// File
 		act("open", "Open File…", "File", k("Mod+O"), a.openFileDialog),
 		act("open_folder", "Open Folder…", "File", k("Mod+Shift+O"), a.openFolderDialog),
+		act("open_disc", "Open DVD or Blu-ray…", "File", nil, a.openDisc),
 		act("open_url", "Open URL…", "File", k("Mod+U"), func() { a.ui.showOpenURL() }),
 		act("network_media", "Media on Your Network…", "File", nil, func() { a.ui.dialogs.net.show() }),
 		act("paste", "Open Link or File from Clipboard", "File", k("Mod+V"), a.openClipboard),

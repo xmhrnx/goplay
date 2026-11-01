@@ -18,6 +18,10 @@ Made for macOS first, and built for Windows and Linux too.
   folder, in natural order (2 before 10).
 - Recent files on the start screen, with how far you got.
 - Drag and drop files, folders and subtitles, or paste a link or path.
+- DVDs and Blu-rays: from a drive, a copied disc folder or an `.iso`
+  image, starting at the movie, with the disc's other titles in Playback ›
+  Titles. Disc menus aren't shown, and most Blu-rays sold are encrypted:
+  they need libaacs and a key database.
 - Media on your network: browse the videos and music shared by DLNA/UPnP
   media servers (a NAS, Plex, Emby, Jellyfin, Windows media sharing) and play
   a file or a whole folder. A server that isn't found by itself can be added

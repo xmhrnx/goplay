@@ -73,6 +73,32 @@ func (a *App) openFolderDialog() {
 	}, func(p []string) { a.openItems(p, false) })
 }
 
+// openDisc plays the DVDs and Blu-rays in the drives, or asks for one's
+// folder (a copied disc, or its VIDEO_TS or BDMV folder) when there's
+// none.
+func (a *App) openDisc() {
+	go func() {
+		discs := library.Discs()
+		a.Post(func() {
+			if len(discs) > 0 {
+				a.openItems(discs, false)
+				return
+			}
+			a.toast(tr("There's no DVD or Blu-ray in a drive. Pick a disc's folder."))
+			a.picked(func() ([]string, error) {
+				d, err := a.g.PickFolder(context.Background(), giode.FolderOptions{Title: tr("Open DVD or Blu-ray")})
+				return []string{d}, err
+			}, func(p []string) {
+				if k, _ := library.Disc(p[0]); k == library.NoDisc {
+					a.toastError(tr("{name} isn't a DVD or Blu-ray", "name", filepath.Base(p[0])))
+					return
+				}
+				a.openItems(p, false)
+			})
+		})
+	}()
+}
+
 func (a *App) addFilesDialog() {
 	a.pick(mediaTypes(), true, func(p []string) { a.openItems(p, true) })
 }
