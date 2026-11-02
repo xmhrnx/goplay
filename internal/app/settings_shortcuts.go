@@ -44,6 +44,10 @@ func newShortcutEditor(u *ui) *shortcutEditor {
 // content lists every command with its shortcuts.
 func (e *shortcutEditor) content() elements.Element {
 	a := e.u.a
+	if e.capture != "" {
+		// Above the dialog's own, so Escape cancels the recording.
+		elements.HandleDismiss(func() { e.capture = "" })
+	}
 	rows := []elements.Element{note(tr("Click a shortcut to change it, then press the new keys. Backspace removes it; Escape cancels."))}
 	for _, cat := range a.actions.Categories() {
 		rows = append(rows, elements.Box(styles.Styles{Padding: properties.Inset{Top: 14, Bottom: 4}},
@@ -114,9 +118,6 @@ func (u *ui) captureKey(ev key.Event) {
 	switch ev.Name {
 	case key.NameCtrl, key.NameShift, key.NameAlt, key.NameSuper, key.NameCommand:
 		return // wait for the key itself
-	case key.NameEscape:
-		e.capture = ""
-		return
 	}
 	id, idx := e.capture, e.captureIdx
 	e.capture = ""

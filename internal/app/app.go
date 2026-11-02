@@ -136,6 +136,7 @@ func New(files, commands []string, icon []byte) (*App, error) {
 		// current.
 		UnderlayRelease: a.releaseVideo,
 		OnEvent:         a.windowEvent,
+		OnKey:           a.onKey,
 		OnFileDrop:      a.dropped,
 		OnOpenURL:       a.openedURL,
 		OnContextAction: func(_ string, paths []string) {
@@ -360,7 +361,6 @@ func (a *App) frame(gtx layout.Context) layout.Dimensions {
 	st := &a.player.State
 	a.showVideo.Store(!st.Idle && !a.casting())
 	a.ui.layout(gtx)
-	a.handleKeys(gtx)
 
 	if a.dirty {
 		a.dirty = false
@@ -396,27 +396,14 @@ func (a *App) updateVideoMargins(fb image.Point) {
 	}
 }
 
-// handleKeys takes the keys nothing in the UI took: shortcuts, and
-// otherwise mpv's own bindings.
-//
-// Gio hands a key event to the first gtx.Event call that asks for it,
-// and dialogs are laid out after this, on top of everything. So while
-// one is open only Escape is taken here, and its text fields get the
-// rest (Backspace, the arrows); recording a shortcut still takes all.
-func (a *App) handleKeys(gtx layout.Context) {
-	f := key.Filter{Optional: key.ModCtrl | key.ModShift | key.ModAlt | key.ModSuper | key.ModCommand}
-	if a.ui.modalOpen() && !a.ui.capturingKey() {
-		f = key.Filter{Name: key.NameEscape}
+// onKey takes the keys nothing in the UI took (text fields, dialogs and
+// menus come first): shortcuts, and otherwise mpv's own bindings.
+func (a *App) onKey(e key.Event) bool {
+	if e.State != key.Press || !a.handleKey(e) {
+		return false
 	}
-	for {
-		ev, ok := gtx.Event(f)
-		if !ok {
-			return
-		}
-		if e, ok := ev.(key.Event); ok && e.State == key.Press && a.handleKey(e) {
-			a.dirty = true
-		}
-	}
+	a.dirty = true
+	return true
 }
 
 // handleKey runs the shortcut for a key press. It reports whether the

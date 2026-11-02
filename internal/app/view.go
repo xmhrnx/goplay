@@ -103,7 +103,7 @@ func newUI(a *App) *ui {
 	u.panel = newSidePanel(u)
 	u.drawer = drawer.New(&u.panelOpen, drawer.Right, panelWidth, u.panel.content, styles.Styles{
 		Background: colSurface,
-	})
+	}).Animated(false)
 	u.dialogs = newDialogs(u)
 	u.toasts = toaster.New(styles.Styles{Background: colSurface2, BorderColor: colBorder, Color: colText, FontSize: 13}).
 		Placement(toaster.TopCenter).Max(3)

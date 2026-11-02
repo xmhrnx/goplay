@@ -47,9 +47,9 @@ func newPrefsView(u *ui) *prefsView {
 	p.mpvConf = secondaryButton(tr("Edit mpv.conf"), func() { a.editConfigFile("mpv.conf") })
 	p.inputConf = secondaryButton(tr("Edit input.conf"), func() { a.editConfigFile("input.conf") })
 	p.dlg = dialog.New(&p.open, p.content, styles.Styles{
-		Background: colSurface, BorderRadius: 16, Padding: properties.UniformInset(0),
+		Background: colSurface, BorderRadius: 16,
 		BoxShadow: properties.BoxShadow{Y: 18, Blur: 48, Color: "#000000e6"},
-	})
+	}).Padding(properties.Inset{})
 	return p
 }
 
