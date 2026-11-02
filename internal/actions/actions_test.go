@@ -6,37 +6,43 @@ import (
 	"gioui.org/io/key"
 )
 
-// The tests describe the non-macOS spelling ("Mod" shows as Ctrl); the
-// mapping is the same with Command on macOS.
-func init() { isMac = false }
-
-func TestNormalize(t *testing.T) {
-	for in, want := range map[string]string{
-		"ctrl+shift+o": "Mod+Shift+O",
-		"Shift+Mod+O":  "Mod+Shift+O",
-		"space":        "Space",
-		"Alt+return":   "Alt+Enter",
-		"Mod++":        "Mod++",
-		"shift+/":      "Shift+/",
-		"Cmd+Q":        "Meta+Q",
+func TestSame(t *testing.T) {
+	for _, c := range [][2]string{
+		{"ctrl+shift+o", "Mod+Shift+O"},
+		{"Shift+Mod+O", "Mod+Shift+O"},
+		{"space", "Space"},
+		{"Alt+return", "Alt+Enter"},
+		{"shift+/", "Shift+/"},
 	} {
-		if got := Normalize(in); got != want {
-			t.Errorf("Normalize(%q) = %q, want %q", in, got, want)
+		if !Same(c[0], c[1]) {
+			t.Errorf("Same(%q, %q) = false", c[0], c[1])
 		}
+	}
+	if Same("Mod+O", "O") {
+		t.Error("Same(Mod+O, O) = true")
 	}
 }
 
-func TestDisplay(t *testing.T) {
-	if got := Display("Mod+Shift+O"); got != "Ctrl+Shift+O" {
-		t.Errorf("got %q", got)
-	}
-	isMac = true
-	defer func() { isMac = false }()
-	if got := Display("Mod+Shift+O"); got != "⇧⌘O" {
-		t.Errorf("mac got %q", got)
-	}
-	if got := Display("Shift+Left"); got != "⇧←" {
-		t.Errorf("mac got %q", got)
+func TestFromEvent(t *testing.T) {
+	for _, c := range []struct {
+		e    key.Event
+		want string
+	}{
+		{key.Event{Name: "O", Modifiers: key.ModShortcut | key.ModShift}, "Mod+Shift+O"},
+		{key.Event{Name: key.NameLeftArrow, Modifiers: key.ModAlt}, "Alt+Left"},
+		{key.Event{Name: key.NameEnter}, "Enter"},
+		{key.Event{Name: key.NameF11}, "F11"},
+	} {
+		got := FromEvent(c.e)
+		if got != c.want {
+			t.Errorf("FromEvent(%v) = %q, want %q", c.e, got, c.want)
+		}
+		// What the shortcut editor records must run the command again.
+		r := NewRegistry()
+		r.Add(&Action{ID: "x", Keys: []string{got}})
+		if a := r.Lookup(c.e); a == nil {
+			t.Errorf("%q doesn't match the press it came from", got)
+		}
 	}
 }
 

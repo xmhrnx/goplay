@@ -5,11 +5,12 @@
 package actions
 
 import (
-	"runtime"
 	"sort"
 	"strings"
 
 	"gioui.org/io/key"
+
+	"github.com/mehran9675/giode/shortcut"
 )
 
 // Action is one command.
@@ -41,15 +42,15 @@ func (a *Action) IsChecked() bool { return a.Checked != nil && a.Checked() }
 type Registry struct {
 	list []*Action
 	byID map[string]*Action
-	// keys maps a normalized shortcut to its action.
-	keys map[string]*Action
+	// keys maps a key and its modifiers to the action they run.
+	keys map[combo]*Action
 	// custom holds user overrides: action ID to its shortcuts.
 	custom map[string][]string
 }
 
 // NewRegistry returns an empty registry.
 func NewRegistry() *Registry {
-	return &Registry{byID: map[string]*Action{}, keys: map[string]*Action{}, custom: map[string][]string{}}
+	return &Registry{byID: map[string]*Action{}, keys: map[combo]*Action{}, custom: map[string][]string{}}
 }
 
 // Add registers actions. IDs must be unique.
@@ -121,34 +122,44 @@ func (r *Registry) Customized(id string) bool {
 }
 
 // Owner returns the action a shortcut runs, if any.
-func (r *Registry) Owner(shortcut string) *Action {
-	return r.keys[Normalize(shortcut)]
+func (r *Registry) Owner(spec string) *Action {
+	c, ok := parse(spec)
+	if !ok {
+		return nil
+	}
+	return r.keys[c]
 }
 
 // rebind rebuilds the shortcut index. Later registrations and custom
 // bindings win over earlier defaults.
 func (r *Registry) rebind() {
-	r.keys = map[string]*Action{}
-	for _, a := range r.list {
-		if _, ok := r.custom[a.ID]; ok {
-			continue
+	r.keys = map[combo]*Action{}
+	bind := func(a *Action, specs []string) {
+		for _, k := range specs {
+			if c, ok := parse(k); ok {
+				r.keys[c] = a
+			}
 		}
-		for _, k := range a.Keys {
-			r.keys[Normalize(k)] = a
+	}
+	for _, a := range r.list {
+		if _, ok := r.custom[a.ID]; !ok {
+			bind(a, a.Keys)
 		}
 	}
 	for id, ks := range r.custom {
 		if a := r.byID[id]; a != nil {
-			for _, k := range ks {
-				r.keys[Normalize(k)] = a
-			}
+			bind(a, ks)
 		}
 	}
 }
 
 // Lookup returns the action bound to a key press.
 func (r *Registry) Lookup(e key.Event) *Action {
-	return r.keys[FromEvent(e)]
+	name := e.Name
+	if name == key.NameEnter {
+		name = key.NameReturn // the keypad's Enter runs Enter's command
+	}
+	return r.keys[combo{name, e.Modifiers}]
 }
 
 // Search returns the palette's matches for a query: every word must
@@ -184,12 +195,28 @@ func (r *Registry) Search(query string) []*Action {
 	return out
 }
 
-// Shortcuts.
-//
-// A shortcut is written as modifiers then a key, joined by "+": "Mod",
-// "Ctrl", "Alt", "Shift" (and "Meta" for the Windows/Command key where
-// it isn't Mod), then a key name: a letter or digit, a symbol ("[",
-// "/"), or a name ("Left", "Space", "Enter", "F11").
+// Shortcuts are written the way Giode's shortcut package reads them:
+// modifiers then a key, joined by "+" ("Mod+O", "Shift+Left", "Space").
+// "Mod" is Command on macOS and Ctrl elsewhere.
+
+// combo is a parsed shortcut.
+type combo struct {
+	name key.Name
+	mods key.Modifiers
+}
+
+func parse(spec string) (combo, bool) {
+	name, mods, err := shortcut.Parse(spec)
+	return combo{name, mods}, err == nil
+}
+
+// Same reports whether two shortcuts are the same keys, however they're
+// spelled ("ctrl+o" and "Mod+O" off macOS).
+func Same(a, b string) bool {
+	ca, oka := parse(a)
+	cb, okb := parse(b)
+	return oka && okb && ca == cb
+}
 
 var keyNames = map[key.Name]string{
 	key.NameLeftArrow:      "Left",
@@ -209,10 +236,7 @@ var keyNames = map[key.Name]string{
 	key.NameSpace:          "Space",
 }
 
-// isMac is whether "Mod" means Command.
-var isMac = runtime.GOOS == "darwin"
-
-// FromEvent writes a key press as a normalized shortcut.
+// FromEvent writes a key press as a shortcut.
 func FromEvent(e key.Event) string {
 	name, ok := keyNames[e.Name]
 	if !ok {
@@ -220,147 +244,17 @@ func FromEvent(e key.Event) string {
 	}
 	m := e.Modifiers
 	var parts []string
-	if isMac {
-		if m.Contain(key.ModCommand) {
-			parts = append(parts, "Mod")
+	for _, mod := range []struct {
+		m    key.Modifiers
+		name string
+	}{{key.ModShortcut, "Mod"}, {key.ModCtrl, "Ctrl"}, {key.ModCommand, "Cmd"}, {key.ModSuper, "Super"},
+		{key.ModAlt, "Alt"}, {key.ModShift, "Shift"}} {
+		if m.Contain(mod.m) {
+			parts = append(parts, mod.name)
+			m &^= mod.m
 		}
-		if m.Contain(key.ModCtrl) {
-			parts = append(parts, "Ctrl")
-		}
-	} else {
-		if m.Contain(key.ModCtrl) {
-			parts = append(parts, "Mod")
-		}
-		if m.Contain(key.ModSuper) {
-			parts = append(parts, "Meta")
-		}
-	}
-	if m.Contain(key.ModAlt) {
-		parts = append(parts, "Alt")
-	}
-	if m.Contain(key.ModShift) {
-		parts = append(parts, "Shift")
 	}
 	return strings.Join(append(parts, name), "+")
-}
-
-// Normalize writes a shortcut in canonical form: modifiers in a fixed
-// order and spelling, the key upper-cased ("ctrl+shift+o" and
-// "Shift+Mod+O" both become "Mod+Shift+O" off macOS).
-func Normalize(s string) string {
-	parts := strings.Split(strings.TrimSpace(s), "+")
-	// A shortcut ending in "+" means the plus key ("Mod++").
-	if strings.HasSuffix(s, "++") {
-		parts = append(parts[:len(parts)-2], "+")
-	}
-	if len(parts) == 0 {
-		return ""
-	}
-	keyPart := strings.TrimSpace(parts[len(parts)-1])
-	var mod, ctrl, meta, alt, shift bool
-	for _, p := range parts[:len(parts)-1] {
-		switch strings.ToLower(strings.TrimSpace(p)) {
-		case "mod", "cmdorctrl":
-			mod = true
-		case "ctrl", "control":
-			if isMac {
-				ctrl = true
-			} else {
-				mod = true
-			}
-		case "cmd", "command", "meta", "super", "win":
-			if isMac {
-				mod = true
-			} else {
-				meta = true
-			}
-		case "alt", "option", "opt":
-			alt = true
-		case "shift":
-			shift = true
-		}
-	}
-	name := canonicalKey(keyPart)
-	var out []string
-	if mod {
-		out = append(out, "Mod")
-	}
-	if ctrl {
-		out = append(out, "Ctrl")
-	}
-	if meta {
-		out = append(out, "Meta")
-	}
-	if alt {
-		out = append(out, "Alt")
-	}
-	if shift {
-		out = append(out, "Shift")
-	}
-	return strings.Join(append(out, name), "+")
-}
-
-func canonicalKey(k string) string {
-	for _, n := range keyNames {
-		if strings.EqualFold(k, n) {
-			return n
-		}
-	}
-	switch strings.ToLower(k) {
-	case "return":
-		return "Enter"
-	case "esc":
-		return "Escape"
-	case "del":
-		return "Delete"
-	case "pgup":
-		return "PageUp"
-	case "pgdn":
-		return "PageDown"
-	}
-	return strings.ToUpper(k)
-}
-
-// Display writes a shortcut the way the platform shows them: "⌘⇧O" on
-// macOS, "Ctrl+Shift+O" elsewhere.
-func Display(s string) string {
-	s = Normalize(s)
-	parts := strings.Split(s, "+")
-	if strings.HasSuffix(s, "++") {
-		parts = append(parts[:len(parts)-2], "+")
-	}
-	keyPart := parts[len(parts)-1]
-	mods := parts[:len(parts)-1]
-	if isMac {
-		symbols := map[string]string{"Mod": "⌘", "Ctrl": "⌃", "Alt": "⌥", "Shift": "⇧"}
-		keys := map[string]string{"Left": "←", "Right": "→", "Up": "↑", "Down": "↓", "Enter": "↩", "Escape": "⎋",
-			"Backspace": "⌫", "Delete": "⌦", "Space": "Space", "Tab": "⇥", "PageUp": "⇞", "PageDown": "⇟"}
-		var b strings.Builder
-		for _, m := range []string{"Ctrl", "Alt", "Shift", "Mod"} {
-			for _, p := range mods {
-				if p == m {
-					b.WriteString(symbols[m])
-				}
-			}
-		}
-		if k, ok := keys[keyPart]; ok {
-			keyPart = k
-		}
-		b.WriteString(keyPart)
-		return b.String()
-	}
-	out := make([]string, 0, len(parts))
-	for _, m := range mods {
-		switch m {
-		case "Mod":
-			out = append(out, "Ctrl")
-		case "Meta":
-			out = append(out, "Win")
-		default:
-			out = append(out, m)
-		}
-	}
-	return strings.Join(append(out, keyPart), "+")
 }
 
 // MPVKey writes a key press in mpv's key syntax ("ctrl+LEFT", "A",

@@ -8,6 +8,7 @@ import (
 	"github.com/mehran9675/giode/components/button"
 	"github.com/mehran9675/giode/components/scroll"
 	"github.com/mehran9675/giode/elements"
+	"github.com/mehran9675/giode/shortcut"
 	"github.com/mehran9675/giode/styles"
 	"github.com/mehran9675/giode/styles/properties"
 
@@ -67,7 +68,7 @@ func (e *shortcutEditor) row(act *actions.Action) elements.Element {
 	keys := a.actions.Keys(act.ID)
 	chips := []elements.Element{}
 	for i, k := range keys {
-		chips = append(chips, e.chip(act.ID, i, actions.Display(k)))
+		chips = append(chips, e.chip(act.ID, i, shortcut.Format(k)))
 	}
 	if e.capture == act.ID && e.captureIdx < 0 {
 		chips = append(chips, keyChip(tr("Press keys…"), true))
@@ -132,15 +133,15 @@ func (u *ui) captureKey(ev key.Event) {
 	}
 	sc := actions.FromEvent(ev)
 	if owner := a.actions.Owner(sc); owner != nil && owner.ID != id {
-		var rest []string
+		rest := []string{} // empty, not nil: nil restores the defaults
 		for _, k := range a.actions.Keys(owner.ID) {
-			if actions.Normalize(k) != sc {
+			if !actions.Same(k, sc) {
 				rest = append(rest, k)
 			}
 		}
 		a.actions.SetCustom(owner.ID, rest)
 		a.settings.SetKeys(owner.ID, rest)
-		a.toast(tr("{shortcut} moved from “{command}”", "shortcut", actions.Display(sc), "command", tr(owner.Title)))
+		a.toast(tr("{shortcut} moved from “{command}”", "shortcut", shortcut.Format(sc), "command", tr(owner.Title)))
 	}
 	if idx >= 0 && idx < len(keys) {
 		keys[idx] = sc

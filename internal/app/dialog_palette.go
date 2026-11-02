@@ -5,6 +5,7 @@ import (
 	"github.com/mehran9675/giode/components/input"
 	"github.com/mehran9675/giode/components/virtuallist"
 	"github.com/mehran9675/giode/elements"
+	"github.com/mehran9675/giode/shortcut"
 	"github.com/mehran9675/giode/styles"
 	"github.com/mehran9675/giode/styles/properties"
 
@@ -77,7 +78,7 @@ func (d *paletteDialog) row(i int) elements.Element {
 			elements.Text(tr(act.Category), styles.Styles{Color: colFaint, FontSize: 12}),
 		}
 		if ks := a.actions.Keys(act.ID); len(ks) > 0 {
-			children = append(children, keyChip(actions.Display(ks[0]), false))
+			children = append(children, keyChip(shortcut.Format(ks[0]), false))
 		}
 		return elements.Row(styles.Styles{Width: -1, Height: -1, Gap: 10, Align: properties.AlignCenter, Padding: properties.SymmetricInset(10, 0),
 			Background: bg, BorderRadius: 8, Wrap: properties.WrapNoWrap}, children...)

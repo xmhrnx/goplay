@@ -8,10 +8,10 @@ import (
 	"github.com/mehran9675/giode/components/slider"
 	"github.com/mehran9675/giode/components/tooltip"
 	"github.com/mehran9675/giode/elements"
+	"github.com/mehran9675/giode/shortcut"
 	"github.com/mehran9675/giode/styles"
 	"github.com/mehran9675/giode/styles/properties"
 
-	"github.com/mehran9675/goplay/internal/actions"
 	"github.com/mehran9675/goplay/internal/cast"
 	"github.com/mehran9675/goplay/internal/player"
 	"github.com/mehran9675/goplay/internal/settings"
@@ -130,7 +130,7 @@ func newControlBar(u *ui) *controlBar {
 	key := func(title, id string) func() string {
 		return func() string {
 			if ks := a.actions.Keys(id); len(ks) > 0 {
-				return title + "  " + actions.Display(ks[0])
+				return title + "  " + shortcut.Format(ks[0])
 			}
 			return title
 		}
