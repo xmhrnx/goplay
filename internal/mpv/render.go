@@ -35,9 +35,14 @@ static void goplay_render_set_update(mpv_render_context* rc, uintptr_t id) {
 
 static int goplay_render(mpv_render_context* rc, int fbo, int w, int h, int flip) {
 	mpv_opengl_fbo target = {fbo, w, h, 0};
+	// Draw at once rather than waiting for the frame's display time:
+	// the window redraws for the UI too (resizing, animations), and
+	// waiting there would hold it to the video's frame rate.
+	int block = 0;
 	mpv_render_param params[] = {
 		{MPV_RENDER_PARAM_OPENGL_FBO, &target},
 		{MPV_RENDER_PARAM_FLIP_Y, &flip},
+		{MPV_RENDER_PARAM_BLOCK_FOR_TARGET_TIME, &block},
 		{MPV_RENDER_PARAM_INVALID, 0},
 	};
 	return mpv_render_context_render(rc, params);

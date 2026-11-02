@@ -360,9 +360,6 @@ func (a *App) frame(gtx layout.Context) layout.Dimensions {
 	st := &a.player.State
 	a.showVideo.Store(!st.Idle && !a.casting())
 	a.ui.layout(gtx)
-	// After the UI, so a focused text field gets its keys (Backspace,
-	// the arrows) before the shortcuts do: Gio hands a key event to the
-	// first matching gtx.Event call in the frame.
 	a.handleKeys(gtx)
 
 	if a.dirty {
@@ -401,9 +398,18 @@ func (a *App) updateVideoMargins(fb image.Point) {
 
 // handleKeys takes the keys nothing in the UI took: shortcuts, and
 // otherwise mpv's own bindings.
+//
+// Gio hands a key event to the first gtx.Event call that asks for it,
+// and dialogs are laid out after this, on top of everything. So while
+// one is open only Escape is taken here, and its text fields get the
+// rest (Backspace, the arrows); recording a shortcut still takes all.
 func (a *App) handleKeys(gtx layout.Context) {
+	f := key.Filter{Optional: key.ModCtrl | key.ModShift | key.ModAlt | key.ModSuper | key.ModCommand}
+	if a.ui.modalOpen() && !a.ui.capturingKey() {
+		f = key.Filter{Name: key.NameEscape}
+	}
 	for {
-		ev, ok := gtx.Event(key.Filter{Optional: key.ModCtrl | key.ModShift | key.ModAlt | key.ModSuper | key.ModCommand})
+		ev, ok := gtx.Event(f)
 		if !ok {
 			return
 		}

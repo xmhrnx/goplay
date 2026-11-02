@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/mehran9675/giode/components/iconbutton"
 	"github.com/mehran9675/giode/elements"
 	"github.com/mehran9675/giode/styles"
 	"github.com/mehran9675/giode/styles/properties"
@@ -30,7 +31,19 @@ func (u *ui) windowTitle() string {
 
 // titleButtons are the title bar's extra controls: the app menu.
 func (u *ui) titleButtons() []elements.Element {
-	more := ghostButton("menu", 18, tr("Menu"), func() { u.openAppMenu() })
+	more := titleBarButton("menu", tr("Menu"), func() { u.openAppMenu() })
 	u.appMenuAnchor = &anchor{el: more}
 	return []elements.Element{u.appMenuAnchor}
+}
+
+// titleBarButton is shaped like the window buttons beside it: 46 by 36,
+// filling the bar's height.
+func titleBarButton(icon, label string, onClick func()) *iconbutton.Button {
+	const w, h, size = 46, 36, 16
+	return iconbutton.New(ic(icon, size, colText), styles.Styles{
+		Color:   colText,
+		Width:   w,
+		Height:  h,
+		Padding: properties.SymmetricInset((w-size)/2, (h-size)/2),
+	}).Variant(iconbutton.VariantGhost).Label(label).OnClick(onClick)
 }

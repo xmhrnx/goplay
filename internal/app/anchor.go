@@ -2,6 +2,7 @@ package app
 
 import (
 	"image"
+	"time"
 
 	"gioui.org/f32"
 	"gioui.org/layout"
@@ -18,13 +19,19 @@ type anchor struct {
 	// laid out; tracked is the probe TrackPosition keeps moving.
 	pos, tracked image.Point
 	size         image.Point
+	// frame is when the current frame started; el may be laid out more
+	// than once in it (measured first, as the title bar does).
+	frame time.Time
 }
 
 func (an *anchor) Layout(gtx layout.Context) layout.Dimensions {
 	// Rows place their children after laying them out; TrackPosition
 	// follows them there. Clicks handled while el lays out read the
 	// last frame's position, which is final.
-	an.pos = an.tracked
+	if !gtx.Now.Equal(an.frame) {
+		an.frame = gtx.Now
+		an.pos = an.tracked
+	}
 	elements.TrackPosition(&an.tracked)
 	d := an.el.Layout(gtx)
 	an.size = d.Size
