@@ -3,6 +3,7 @@ package app
 import (
 	"os"
 	"runtime"
+	"strings"
 
 	"gioui.org/font"
 	"gioui.org/font/gofont"
@@ -11,6 +12,8 @@ import (
 	"github.com/xmhrnx/giode/fonts"
 	"github.com/xmhrnx/giode/styles"
 	"github.com/xmhrnx/giode/styles/properties"
+
+	notofonts "github.com/mehran9675/goplay/fonts"
 )
 
 // The look: near-black surfaces, white for what matters, no color but
@@ -139,7 +142,35 @@ func uiFonts() []font.FontFace {
 			faces = append(faces, f)
 		}
 	}
+	faces = append(faces, scriptFonts()...)
 	return append(faces, gofont.Collection()...)
+}
+
+// scriptFonts loads the embedded Noto fonts, which text falls back to
+// for scripts the UI font lacks (Bengali, Thai, CJK, ...).
+func scriptFonts() []font.FontFace {
+	files, err := notofonts.FS.ReadDir(".")
+	if err != nil {
+		return nil
+	}
+	var faces []font.FontFace
+	for _, file := range files {
+		data, err := notofonts.FS.ReadFile(file.Name())
+		if err != nil {
+			continue
+		}
+		fs, err := opentype.ParseCollection(data)
+		if err != nil {
+			continue
+		}
+		for _, f := range fs {
+			// Each needs a typeface of its own: Gio keys faces by their
+			// description, so one sharing the UI font's would replace it.
+			f.Font.Typeface = font.Typeface(strings.TrimSuffix(file.Name(), ".ttf"))
+			faces = append(faces, f)
+		}
+	}
+	return faces
 }
 
 // scrollStyles fill a scrolling page and use goplay's scroll bar.
