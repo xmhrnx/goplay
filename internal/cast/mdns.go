@@ -29,32 +29,10 @@ type service struct {
 // seconds until ctx ends, reporting each instance once its address is
 // known.
 func browse(ctx context.Context, svc string, found func(service)) error {
-	conn, err := net.ListenUDP("udp4", &net.UDPAddr{})
+	msg, err := mdnsQuery(svc)
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
-	go func() {
-		<-ctx.Done()
-		conn.Close()
-	}()
-
-	query, err := mdnsQuery(svc)
-	if err != nil {
-		return err
-	}
-	go func() {
-		t := time.NewTicker(3 * time.Second)
-		defer t.Stop()
-		for {
-			conn.WriteToUDP(query, mdnsAddr)
-			select {
-			case <-ctx.Done():
-				return
-			case <-t.C:
-			}
-		}
-	}()
 
 	type partial struct {
 		host string
@@ -64,15 +42,10 @@ func browse(ctx context.Context, svc string, found func(service)) error {
 	instances := map[string]*partial{}
 	addrs := map[string]net.IP{}
 	reported := map[string]bool{}
-	buf := make([]byte, 9000)
-	for {
-		n, src, err := conn.ReadFromUDP(buf)
-		if err != nil {
-			return ctx.Err()
-		}
+	return query(ctx, mdnsAddr, msg, 3*time.Second, func(pk packet) {
 		var p dnsmessage.Parser
-		if _, err := p.Start(buf[:n]); err != nil {
-			continue
+		if _, err := p.Start(pk.data); err != nil {
+			return
 		}
 		p.SkipAllQuestions()
 		var records []dnsmessage.Resource
@@ -123,12 +96,12 @@ func browse(ctx context.Context, svc string, found func(service)) error {
 			if ip == nil {
 				// Some devices leave the A record out: the answer came
 				// from the device itself.
-				ip = src.IP
+				ip = pk.src.IP
 			}
 			reported[inst] = true
 			found(service{Instance: inst, Host: in.host, Port: in.port, Addr: ip, TXT: in.txt})
 		}
-	}
+	})
 }
 
 // mdnsQuery builds a PTR query for svc.

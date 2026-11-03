@@ -45,52 +45,21 @@ func ssdpSearch(ctx context.Context, dst, st string, found func(location string)
 	if err != nil {
 		return
 	}
-	conn, err := net.ListenPacket("udp4", ":0")
-	if err != nil {
-		return
-	}
-	defer conn.Close()
-	go func() {
-		<-ctx.Done()
-		conn.Close()
-	}()
 	search := []byte("M-SEARCH * HTTP/1.1\r\nHOST: " + dst + "\r\nMAN: \"ssdp:discover\"\r\nMX: 2\r\nST: " + st + "\r\n\r\n")
-	go func() {
-		t := time.NewTicker(4 * time.Second)
-		defer t.Stop()
-		for {
-			conn.WriteTo(search, to)
-			select {
-			case <-ctx.Done():
-				return
-			case <-t.C:
-			}
-		}
-	}()
-
 	seen := map[string]bool{}
-	var mu sync.Mutex
-	buf := make([]byte, 4096)
-	for {
-		n, _, err := conn.ReadFrom(buf)
+	query(ctx, to, search, 4*time.Second, func(p packet) {
+		resp, err := http.ReadResponse(bufio.NewReader(bytes.NewReader(p.data)), nil)
 		if err != nil {
 			return
 		}
-		resp, err := http.ReadResponse(bufio.NewReader(bytes.NewReader(buf[:n])), nil)
-		if err != nil {
-			continue
-		}
 		loc := resp.Header.Get("Location")
 		resp.Body.Close()
-		mu.Lock()
-		dup := loc == "" || seen[loc]
-		seen[loc] = true
-		mu.Unlock()
-		if dup {
-			continue
+		if loc == "" || seen[loc] {
+			return
 		}
+		seen[loc] = true
 		go found(loc)
-	}
+	})
 }
 
 // describe fetches a UPnP device's description and the base its
