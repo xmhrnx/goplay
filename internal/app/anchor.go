@@ -7,8 +7,8 @@ import (
 	"gioui.org/f32"
 	"gioui.org/layout"
 
-	"github.com/mehran9675/giode/components/menu"
-	"github.com/mehran9675/giode/elements"
+	"github.com/xmhrnx/giode/components/menu"
+	"github.com/xmhrnx/giode/elements"
 )
 
 // anchor records where an element was laid out, to open popovers from

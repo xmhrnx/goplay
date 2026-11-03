@@ -1,6 +1,6 @@
 package app
 
-import "github.com/mehran9675/giode/components/menu"
+import "github.com/xmhrnx/giode/components/menu"
 
 // recentMenu lists the recently played files.
 func (u *ui) recentMenu() *menu.Menu {

@@ -10,7 +10,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/mehran9675/giode"
+	"github.com/xmhrnx/giode"
 	"github.com/mehran9675/goplay/internal/library"
 	"github.com/mehran9675/goplay/internal/player"
 	"github.com/mehran9675/goplay/internal/settings"

@@ -14,14 +14,14 @@ import (
 	"gioui.org/op/clip"
 	"gioui.org/op/paint"
 
-	"github.com/mehran9675/giode"
-	"github.com/mehran9675/giode/components/drawer"
-	"github.com/mehran9675/giode/components/menu"
-	"github.com/mehran9675/giode/components/titlebar"
-	"github.com/mehran9675/giode/components/toaster"
-	"github.com/mehran9675/giode/elements"
-	"github.com/mehran9675/giode/styles"
-	"github.com/mehran9675/giode/styles/properties"
+	"github.com/xmhrnx/giode"
+	"github.com/xmhrnx/giode/components/drawer"
+	"github.com/xmhrnx/giode/components/menu"
+	"github.com/xmhrnx/giode/components/titlebar"
+	"github.com/xmhrnx/giode/components/toaster"
+	"github.com/xmhrnx/giode/elements"
+	"github.com/xmhrnx/giode/styles"
+	"github.com/xmhrnx/giode/styles/properties"
 
 	"github.com/mehran9675/goplay/internal/settings"
 )

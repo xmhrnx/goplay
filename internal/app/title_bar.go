@@ -1,10 +1,10 @@
 package app
 
 import (
-	"github.com/mehran9675/giode/components/iconbutton"
-	"github.com/mehran9675/giode/elements"
-	"github.com/mehran9675/giode/styles"
-	"github.com/mehran9675/giode/styles/properties"
+	"github.com/xmhrnx/giode/components/iconbutton"
+	"github.com/xmhrnx/giode/elements"
+	"github.com/xmhrnx/giode/styles"
+	"github.com/xmhrnx/giode/styles/properties"
 )
 
 // titleBar puts the title bar on a solid strip beside the video, or on a

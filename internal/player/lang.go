@@ -3,7 +3,7 @@ package player
 import (
 	"strings"
 
-	"github.com/mehran9675/giode/i18n"
+	"github.com/xmhrnx/giode/i18n"
 )
 
 // languages maps ISO 639-1 and 639-2 (B and T) codes to English names,

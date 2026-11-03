@@ -2,7 +2,7 @@
 
 A video player for people who just want to watch something, with depth for
 those who want to tune everything. It plays almost any file or stream with
-mpv's engine, in an interface built with [Giode](https://github.com/mehran9675/giode).
+mpv's engine, in an interface built with [Giode](https://github.com/xmhrnx/giode).
 
 Made for macOS first, and built for Windows and Linux too.
 
@@ -96,7 +96,7 @@ the [giode CLI](https://github.com/Mehran9675/giode-cli), which builds and
 packages GoPlay from `giode.toml`:
 
 ```sh
-go install github.com/mehran9675/giode-cli/cmd/giode@latest
+go install github.com/xmhrnx/giode-cli/cmd/giode@latest
 giode run [file]       # build and run on this computer
 giode build desktop    # this computer's packages, in dist/
 ```

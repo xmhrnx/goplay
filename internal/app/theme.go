@@ -7,10 +7,10 @@ import (
 	"gioui.org/font"
 	"gioui.org/font/gofont"
 	"gioui.org/font/opentype"
-	"github.com/mehran9675/giode/elements"
-	"github.com/mehran9675/giode/fonts"
-	"github.com/mehran9675/giode/styles"
-	"github.com/mehran9675/giode/styles/properties"
+	"github.com/xmhrnx/giode/elements"
+	"github.com/xmhrnx/giode/fonts"
+	"github.com/xmhrnx/giode/styles"
+	"github.com/xmhrnx/giode/styles/properties"
 )
 
 // The look: near-black surfaces, white for what matters, no color but

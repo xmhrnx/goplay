@@ -1,10 +1,10 @@
 package app
 
 import (
-	"github.com/mehran9675/giode/components/icon"
-	"github.com/mehran9675/giode/elements"
-	"github.com/mehran9675/giode/styles"
-	"github.com/mehran9675/giode/styles/properties"
+	"github.com/xmhrnx/giode/components/icon"
+	"github.com/xmhrnx/giode/elements"
+	"github.com/xmhrnx/giode/styles"
+	"github.com/xmhrnx/giode/styles/properties"
 )
 
 // icons are Material Design glyphs (Apache 2.0) on a 24×24 grid,

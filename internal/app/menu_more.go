@@ -1,6 +1,6 @@
 package app
 
-import "github.com/mehran9675/giode/components/menu"
+import "github.com/xmhrnx/giode/components/menu"
 
 // moreMenu is the bar's overflow: the less frequent controls.
 func (u *ui) moreMenu() *menu.Menu {

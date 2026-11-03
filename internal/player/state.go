@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mehran9675/giode/i18n"
+	"github.com/xmhrnx/giode/i18n"
 	"github.com/mehran9675/goplay/internal/mpv"
 )
 

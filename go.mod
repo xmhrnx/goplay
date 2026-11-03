@@ -4,8 +4,8 @@ go 1.26.6
 
 require (
 	gioui.org v0.10.2
-	github.com/mehran9675/giode v0.1.23-alpha.1
 	github.com/ncruces/zenity v0.10.15
+	github.com/xmhrnx/giode v0.1.32-alpha.1
 	golang.org/x/net v0.48.0
 )
 

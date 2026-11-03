@@ -4,13 +4,13 @@ import (
 	"math"
 	"strconv"
 
-	"github.com/mehran9675/giode/components/dropdown"
-	"github.com/mehran9675/giode/components/input"
-	"github.com/mehran9675/giode/components/slider"
-	"github.com/mehran9675/giode/components/toggle"
-	"github.com/mehran9675/giode/elements"
-	"github.com/mehran9675/giode/styles"
-	"github.com/mehran9675/giode/styles/properties"
+	"github.com/xmhrnx/giode/components/dropdown"
+	"github.com/xmhrnx/giode/components/input"
+	"github.com/xmhrnx/giode/components/slider"
+	"github.com/xmhrnx/giode/components/toggle"
+	"github.com/xmhrnx/giode/elements"
+	"github.com/xmhrnx/giode/styles"
+	"github.com/xmhrnx/giode/styles/properties"
 
 	"github.com/mehran9675/goplay/internal/settings"
 )
@@ -47,7 +47,7 @@ func newPrefControl(a *App, d *settings.Def, opts []settings.Option) *prefContro
 			}
 		}
 		c.sel = dropdown.New(styles.Styles{Background: colSurface2, Color: colText, BorderColor: colBorder,
-			BorderRadius: 8, Width: 250, FontSize: 13}, labels...).HoverColor(colSurface3).OnChange(func(i int) {
+			BorderRadius: 8, Width: 250, FontSize: 13, MaxHeight: 400}, labels...).HoverColor(colSurface3).OnChange(func(i int) {
 			if i >= 0 && i < len(c.opts) {
 				a.setSetting(d.Key, c.opts[i].Value)
 			}

@@ -1,6 +1,6 @@
 package app
 
-import "github.com/mehran9675/giode/components/menu"
+import "github.com/xmhrnx/giode/components/menu"
 
 // openMenu holds the ways to open media and what's open.
 func (u *ui) openMenu() *menu.Menu {

@@ -3,14 +3,14 @@ package app
 import (
 	"math"
 
-	"github.com/mehran9675/giode/components/button"
-	"github.com/mehran9675/giode/components/iconbutton"
-	"github.com/mehran9675/giode/components/slider"
-	"github.com/mehran9675/giode/components/tooltip"
-	"github.com/mehran9675/giode/elements"
-	"github.com/mehran9675/giode/shortcut"
-	"github.com/mehran9675/giode/styles"
-	"github.com/mehran9675/giode/styles/properties"
+	"github.com/xmhrnx/giode/components/button"
+	"github.com/xmhrnx/giode/components/iconbutton"
+	"github.com/xmhrnx/giode/components/slider"
+	"github.com/xmhrnx/giode/components/tooltip"
+	"github.com/xmhrnx/giode/elements"
+	"github.com/xmhrnx/giode/shortcut"
+	"github.com/xmhrnx/giode/styles"
+	"github.com/xmhrnx/giode/styles/properties"
 
 	"github.com/mehran9675/goplay/internal/cast"
 	"github.com/mehran9675/goplay/internal/player"

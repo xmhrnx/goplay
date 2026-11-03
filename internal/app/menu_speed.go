@@ -3,7 +3,7 @@ package app
 import (
 	"math"
 
-	"github.com/mehran9675/giode/components/menu"
+	"github.com/xmhrnx/giode/components/menu"
 )
 
 // speedMenu lists the playback speeds.

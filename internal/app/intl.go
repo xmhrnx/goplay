@@ -3,8 +3,8 @@ package app
 import (
 	"embed"
 
-	"github.com/mehran9675/giode"
-	"github.com/mehran9675/giode/i18n"
+	"github.com/xmhrnx/giode"
+	"github.com/xmhrnx/giode/i18n"
 )
 
 // GoPlay's text is translated by its English: the English is the key

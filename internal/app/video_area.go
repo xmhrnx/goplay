@@ -11,11 +11,11 @@ import (
 	"gioui.org/layout"
 	"gioui.org/op/clip"
 
-	"github.com/mehran9675/giode"
-	"github.com/mehran9675/giode/components/spinner"
-	"github.com/mehran9675/giode/elements"
-	"github.com/mehran9675/giode/styles"
-	"github.com/mehran9675/giode/styles/properties"
+	"github.com/xmhrnx/giode"
+	"github.com/xmhrnx/giode/components/spinner"
+	"github.com/xmhrnx/giode/elements"
+	"github.com/xmhrnx/giode/styles"
+	"github.com/xmhrnx/giode/styles/properties"
 
 	"github.com/mehran9675/goplay/internal/player"
 	"github.com/mehran9675/goplay/internal/settings"

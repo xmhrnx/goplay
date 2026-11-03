@@ -3,11 +3,11 @@ package app
 import (
 	"strings"
 
-	"github.com/mehran9675/giode/components/dialog"
-	"github.com/mehran9675/giode/components/virtuallist"
-	"github.com/mehran9675/giode/elements"
-	"github.com/mehran9675/giode/styles"
-	"github.com/mehran9675/giode/styles/properties"
+	"github.com/xmhrnx/giode/components/dialog"
+	"github.com/xmhrnx/giode/components/virtuallist"
+	"github.com/xmhrnx/giode/elements"
+	"github.com/xmhrnx/giode/styles"
+	"github.com/xmhrnx/giode/styles/properties"
 )
 
 // logDialog shows mpv's recent log lines.

@@ -3,7 +3,7 @@ package app
 import (
 	"gioui.org/layout"
 
-	"github.com/mehran9675/giode/components/dialog"
+	"github.com/xmhrnx/giode/components/dialog"
 )
 
 // dialogs are the modal windows, each in its own dialog_*.go file.

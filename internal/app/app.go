@@ -35,8 +35,8 @@ import (
 	"gioui.org/layout"
 	"gioui.org/op"
 
-	"github.com/mehran9675/giode"
-	"github.com/mehran9675/giode/elements"
+	"github.com/xmhrnx/giode"
+	"github.com/xmhrnx/giode/elements"
 
 	"github.com/mehran9675/goplay/internal/actions"
 	"github.com/mehran9675/goplay/internal/library"

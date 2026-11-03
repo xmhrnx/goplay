@@ -3,13 +3,13 @@ package app
 import (
 	"strconv"
 
-	"github.com/mehran9675/giode/components/iconbutton"
-	"github.com/mehran9675/giode/components/segmented"
-	"github.com/mehran9675/giode/components/virtuallist"
-	"github.com/mehran9675/giode/styles/properties"
+	"github.com/xmhrnx/giode/components/iconbutton"
+	"github.com/xmhrnx/giode/components/segmented"
+	"github.com/xmhrnx/giode/components/virtuallist"
+	"github.com/xmhrnx/giode/styles/properties"
 
-	"github.com/mehran9675/giode/elements"
-	"github.com/mehran9675/giode/styles"
+	"github.com/xmhrnx/giode/elements"
+	"github.com/xmhrnx/giode/styles"
 	"github.com/mehran9675/goplay/internal/player"
 )
 

@@ -10,7 +10,7 @@ import (
 
 	"gioui.org/io/key"
 
-	"github.com/mehran9675/giode/shortcut"
+	"github.com/xmhrnx/giode/shortcut"
 )
 
 // Action is one command.

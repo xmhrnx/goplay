@@ -3,12 +3,12 @@ package app
 import (
 	"gioui.org/layout"
 
-	"github.com/mehran9675/giode/components/button"
-	"github.com/mehran9675/giode/components/dialog"
-	"github.com/mehran9675/giode/components/spinner"
-	"github.com/mehran9675/giode/elements"
-	"github.com/mehran9675/giode/styles"
-	"github.com/mehran9675/giode/styles/properties"
+	"github.com/xmhrnx/giode/components/button"
+	"github.com/xmhrnx/giode/components/dialog"
+	"github.com/xmhrnx/giode/components/spinner"
+	"github.com/xmhrnx/giode/elements"
+	"github.com/xmhrnx/giode/styles"
+	"github.com/xmhrnx/giode/styles/properties"
 
 	"github.com/mehran9675/goplay/internal/cast"
 )

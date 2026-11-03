@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/mehran9675/giode/components/menu"
+	"github.com/xmhrnx/giode/components/menu"
 
 	"github.com/mehran9675/goplay/internal/player"
 	"github.com/mehran9675/goplay/internal/settings"
