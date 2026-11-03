@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "DVD'ler ve Blu-ray'ler yayınlanamaz",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Satılan Blu-ray'lerin çoğu şifrelidir ve oynatmak için libaac'lara ve anahtar veritabanına ihtiyaç duyar.",
  "Titles": "DVD başlıkları",
+ "Main movie": "Ana film",
  "Title {number}": "DVD başlığı {number}",
  "Editions": "Video sürümleri",
  "Edition {number}": "Sürüm {number}"

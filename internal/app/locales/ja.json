@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "DVD と Blu-ray はキャストできません",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "販売されているほとんどの Blu-ray は暗号化されており、再生するには libaacs とキー データベースが必要です。",
  "Titles": "DVD タイトル",
+ "Main movie": "本編",
  "Title {number}": "DVD タイトル {number}",
  "Editions": "ビデオ エディション",
  "Edition {number}": "バージョン {number}"

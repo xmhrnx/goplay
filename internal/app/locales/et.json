@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "DVD-sid ja Blu-raysid ei saa edastada",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Enamik müüdavaid Blu-raysid on krüptitud ja vajavad esitamiseks libaacs-i ja võtmete andmebaasi.",
  "Titles": "Pealkirjad",
+ "Main movie": "Põhifilm",
  "Title {number}": "Pealkiri {number}",
  "Editions": "Väljaanded",
  "Edition {number}": "Väljaanne {number}"

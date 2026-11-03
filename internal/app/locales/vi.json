@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "Không thể truyền DVD và Blu-ray",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Hầu hết các đĩa Blu-ray được bán đều được mã hóa và cần libaac cũng như cơ sở dữ liệu chính để phát.",
  "Titles": "Tiêu đề DVD",
+ "Main movie": "Phim chính",
  "Title {number}": "Tiêu đề DVD {number}",
  "Editions": "Phiên bản video",
  "Edition {number}": "Phiên bản {number}"

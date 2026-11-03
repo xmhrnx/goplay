@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "ಡಿವಿಡಿಗಳು ಮತ್ತು ಬ್ಲೂ-ರೇಗಳನ್ನು ಬಿತ್ತರಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "ಮಾರಾಟವಾಗುವ ಹೆಚ್ಚಿನ ಬ್ಲೂ-ರೇಗಳನ್ನು ಎನ್‌ಕ್ರಿಪ್ಟ್ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಪ್ಲೇ ಮಾಡಲು ಲಿಬಾಕ್‌ಗಳು ಮತ್ತು ಪ್ರಮುಖ ಡೇಟಾಬೇಸ್ ಅಗತ್ಯವಿದೆ.",
  "Titles": "DVD ಶೀರ್ಷಿಕೆಗಳು",
+ "Main movie": "ಮುಖ್ಯ ಚಲನಚಿತ್ರ",
  "Title {number}": "ಶೀರ್ಷಿಕೆ {number}",
  "Editions": "ವೀಡಿಯೊ ಆವೃತ್ತಿಗಳು",
  "Edition {number}": "ಆವೃತ್ತಿ {number}"

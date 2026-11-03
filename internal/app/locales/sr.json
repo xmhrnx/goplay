@@ -530,6 +530,7 @@
  "DVDs and Blu-rays can't be cast": "DVD и Blu-ray дискови не могу да се емитују",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Већина Blu-ray дискова у продаји је шифрована и за репродукцију им требају libaacs и база кључева.",
  "Titles": "Наслови",
+ "Main movie": "Главни филм",
  "Title {number}": "Наслов {number}",
  "Editions": "Издања",
  "Edition {number}": "Издање {number}"

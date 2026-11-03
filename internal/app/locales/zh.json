@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "DVD和蓝光无法投射",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "大多数出售的蓝光光盘都是加密的，需要 libaacs 和密钥数据库才能播放。",
  "Titles": "DVD 标题",
+ "Main movie": "正片",
  "Title {number}": "DVD 标题 {number}",
  "Editions": "视频版本",
  "Edition {number}": "版本{number}"

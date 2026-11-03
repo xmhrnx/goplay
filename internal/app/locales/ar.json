@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "لا يمكن إرسال أقراص DVD وBlu-ray",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "معظم أقراص Blu-ray المباعة مشفرة وتحتاج إلى libacs وقاعدة بيانات رئيسية لتشغيلها.",
  "Titles": "عناوين DVD",
+ "Main movie": "الفيلم الرئيسي",
  "Title {number}": "عنوان DVD {number}",
  "Editions": "إصدارات الفيديو",
  "Edition {number}": "الإصدار {number}"

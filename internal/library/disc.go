@@ -5,8 +5,11 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 	"runtime"
+	"strconv"
 	"strings"
+	"time"
 )
 
 // Discs. mpv plays a DVD or Blu-ray from its folder structure, in a
@@ -154,4 +157,31 @@ func imageKind(path string, size int64) DiscKind {
 		return BluRay
 	}
 	return DVD
+}
+
+// DiscTitle is one of a Blu-ray's titles, as mpv names it among the
+// editions: "title: 91 (00:05:33.333) (00965.mpls)".
+type DiscTitle struct {
+	Number int
+	Length time.Duration
+}
+
+// MinDiscTitle is how long a title must be to list: a Blu-ray has
+// dozens of shorter ones, menu backgrounds, logos and warnings.
+const MinDiscTitle = time.Minute
+
+var discTitleRE = regexp.MustCompile(`^title: (\d+) \((\d+):(\d+):(\d+(?:\.\d+)?)\)`)
+
+// ParseDiscTitle reads an edition name mpv gave a Blu-ray title.
+func ParseDiscTitle(s string) (DiscTitle, bool) {
+	m := discTitleRE.FindStringSubmatch(s)
+	if m == nil {
+		return DiscTitle{}, false
+	}
+	n, _ := strconv.Atoi(m[1])
+	h, _ := strconv.Atoi(m[2])
+	min, _ := strconv.Atoi(m[3])
+	sec, _ := strconv.ParseFloat(m[4], 64)
+	d := time.Duration(h)*time.Hour + time.Duration(min)*time.Minute + time.Duration(sec*float64(time.Second))
+	return DiscTitle{Number: n, Length: d}, true
 }

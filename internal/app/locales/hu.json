@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "DVD és Blu-ray lemez nem küldhető át",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "A legtöbb kereskedelmi Blu-ray titkosított, lejátszásához libaacs és kulcsadatbázis kell.",
  "Titles": "Címek",
+ "Main movie": "Fő film",
  "Title {number}": "{number}. cím",
  "Editions": "Változatok",
  "Edition {number}": "{number}. változat"

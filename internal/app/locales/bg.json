@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "DVD и Blu-ray дисковете не могат да се предават",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Повечето продавани Blu-ray дискове са шифровани и за възпроизвеждането им са нужни libaacs и база данни с ключове.",
  "Titles": "Заглавия",
+ "Main movie": "Основен филм",
  "Title {number}": "Заглавие {number}",
  "Editions": "Издания",
  "Edition {number}": "Издание {number}"

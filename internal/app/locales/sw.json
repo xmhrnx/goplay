@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "DVD na Blu-rays haziwezi kurushwa",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Blu-ray nyingi zinazouzwa zimesimbwa kwa njia fiche na zinahitaji libaacs na hifadhidata muhimu ili kucheza.",
  "Titles": "Vichwa vya DVD",
+ "Main movie": "Filamu kuu",
  "Title {number}": "Jina la DVD {number}",
  "Editions": "Matoleo ya video",
  "Edition {number}": "Toleo la {number}"

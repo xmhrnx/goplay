@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "DVD და Blu-ray-ის ტრანსლირება შეუძლებელია",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "გაყიდული Blu-ray-ების უმეტესობა დაშიფრულია და სათამაშოდ საჭიროა libaacs და გასაღების მონაცემთა ბაზა.",
  "Titles": "DVD სათაურები",
+ "Main movie": "მთავარი ფილმი",
  "Title {number}": "DVD სათაური {number}",
  "Editions": "ვიდეო გამოცემები",
  "Edition {number}": "ვერსია {number}"

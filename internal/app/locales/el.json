@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "Τα DVD και τα Blu-ray δεν μπορούν να μεταδοθούν",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Τα περισσότερα Blu-ray του εμπορίου είναι κρυπτογραφημένα και χρειάζονται το libaacs και μια βάση δεδομένων κλειδιών για αναπαραγωγή.",
  "Titles": "Τίτλοι",
+ "Main movie": "Κύρια ταινία",
  "Title {number}": "Τίτλος {number}",
  "Editions": "Εκδόσεις",
  "Edition {number}": "Έκδοση {number}"

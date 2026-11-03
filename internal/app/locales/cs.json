@@ -527,6 +527,7 @@
  "DVDs and Blu-rays can't be cast": "DVD a Blu-ray nelze odesílat",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Většina prodávaných disků Blu-ray je šifrovaná a k přehrání potřebuje libaacs a databázi klíčů.",
  "Titles": "Tituly",
+ "Main movie": "Hlavní film",
  "Title {number}": "Titul {number}",
  "Editions": "Edice",
  "Edition {number}": "Edice {number}"

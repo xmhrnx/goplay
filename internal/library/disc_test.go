@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 )
 
 func TestDisc(t *testing.T) {
@@ -59,5 +60,18 @@ func TestDisc(t *testing.T) {
 	list, start := Expand([]string{filepath.Join(dir, "dvd.iso")}, true)
 	if len(list) != 2 || list[start] != "dvd://longest/"+filepath.Join(dir, "dvd.iso") {
 		t.Errorf("image in its folder: %v start %d", list, start)
+	}
+}
+
+func TestParseDiscTitle(t *testing.T) {
+	got, ok := ParseDiscTitle("title: 91 (00:05:33.333) (00965.mpls)")
+	if !ok || got.Number != 91 || got.Length != 5*time.Minute+33333*time.Millisecond {
+		t.Errorf("got %+v %v", got, ok)
+	}
+	if got, ok := ParseDiscTitle("title: 1 (01:56:02.289) (00040.mpls)"); !ok || got.Length < 116*time.Minute {
+		t.Errorf("movie: %+v %v", got, ok)
+	}
+	if _, ok := ParseDiscTitle("Director's Cut"); ok {
+		t.Error("a file's edition parsed as a disc title")
 	}
 }

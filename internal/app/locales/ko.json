@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "DVD 및 블루레이는 전송할 수 없습니다.",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "판매되는 대부분의 블루레이는 암호화되어 있으며 재생하려면 libaac과 주요 데이터베이스가 필요합니다.",
  "Titles": "DVD 타이틀",
+ "Main movie": "본편",
  "Title {number}": "DVD 제목 {number}",
  "Editions": "비디오 에디션",
  "Edition {number}": "버전 {number}"

@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "دی وی دی و بلوری را نمی توان پخش کرد",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "بیشتر بلوری های فروخته شده رمزگذاری شده هستند و برای پخش به libaac و یک پایگاه داده کلیدی نیاز دارند.",
  "Titles": "عناوین DVD",
+ "Main movie": "فیلم اصلی",
  "Title {number}": "عنوان DVD {number}",
  "Editions": "نسخه های ویدئویی",
  "Edition {number}": "نسخه {number}"

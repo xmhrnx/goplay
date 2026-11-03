@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "DVDs und Blu-rays können nicht gestreamt werden",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Die meisten gekauften Blu-rays sind verschlüsselt und brauchen zum Abspielen libaacs und eine Schlüsseldatenbank.",
  "Titles": "Titel",
+ "Main movie": "Hauptfilm",
  "Title {number}": "Titel {number}",
  "Editions": "Fassungen",
  "Edition {number}": "Fassung {number}"

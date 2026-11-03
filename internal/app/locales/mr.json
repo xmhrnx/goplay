@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "डीव्हीडी आणि ब्लू-रे कास्ट केले जाऊ शकत नाहीत",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "विकले जाणारे बहुतेक ब्लू-रे एनक्रिप्ट केलेले आहेत आणि प्ले करण्यासाठी libaacs आणि मुख्य डेटाबेस आवश्यक आहे.",
  "Titles": "DVD शीर्षके",
+ "Main movie": "मुख्य चित्रपट",
  "Title {number}": "DVD शीर्षक {number}",
  "Editions": "व्हिडिओ आवृत्त्या",
  "Edition {number}": "आवृत्ती {number}"

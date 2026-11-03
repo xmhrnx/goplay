@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "ไม่สามารถส่ง DVD และ Blu-ray ได้",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "Blu-ray ส่วนใหญ่ที่จำหน่ายมีการเข้ารหัสและต้องใช้ libaac และฐานข้อมูลสำคัญในการเล่น",
  "Titles": "ชื่อดีวีดี",
+ "Main movie": "ภาพยนตร์หลัก",
  "Title {number}": "ชื่อดีวีดี {number}",
  "Editions": "ฉบับวิดีโอ",
  "Edition {number}": "เวอร์ชัน {number}"

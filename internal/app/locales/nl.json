@@ -524,6 +524,7 @@
  "DVDs and Blu-rays can't be cast": "Dvd's en Blu-rays kunnen niet worden gecast",
  "Most Blu-rays sold are encrypted and need libaacs and a key database to play.": "De meeste verkochte Blu-rays zijn versleuteld en hebben libaacs en een sleuteldatabase nodig om af te spelen.",
  "Titles": "Titels",
+ "Main movie": "Hoofdfilm",
  "Title {number}": "Titel {number}",
  "Editions": "Edities",
  "Edition {number}": "Editie {number}"
