@@ -8,7 +8,8 @@ import "strconv"
 // one, and when an output fails to open mpv gives up on audio for the
 // file, so changing the device afterwards does nothing. The player
 // follows mpv's device list (it changes when devices come and go, and on
-// macOS when the default changes) and reopens the output itself.
+// macOS when the default changes) and reopens the output itself. On
+// Windows mpv follows a new default device by itself.
 
 // SetAudioDevice sets the output device by its name in mpv's
 // audio-device-list, or "auto" for the system's default, and moves the
@@ -23,11 +24,20 @@ func (p *Player) SetAudioDevice(name string) {
 	p.restartAudio()
 }
 
-// audioDevicesChanged runs when mpv's device list changes.
+// audioDevicesChanged runs when mpv's device list may have changed.
 func (p *Player) audioDevicesChanged() {
-	if !p.devicesSeen {
+	list, _ := p.h.String("audio-device-list")
+	first := p.devices == ""
+	if list == p.devices {
+		// mpv sends the notice again whenever an output opens (on
+		// Windows, each time a file's audio starts) with the same list.
+		// Reopening the output then would restart it while the file
+		// starts, and its audio could stay stopped, holding playback.
+		return
+	}
+	p.devices = list
+	if first {
 		// The first notice is the list mpv starts with.
-		p.devicesSeen = true
 		p.applyAudioDevice()
 		return
 	}

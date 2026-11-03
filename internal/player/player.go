@@ -86,11 +86,11 @@ type Player struct {
 	// switched).
 	hwdecSaved string
 	// audioDevice is the output device the user chose ("auto" for the
-	// default); devicesSeen is set once mpv has sent its device list.
-	// audioTrack is the audio track playing, or last playing before mpv
+	// default); devices is mpv's device list as last seen, "" before mpv
+	// sent it. audioTrack is the audio track playing, or last playing before mpv
 	// gave up on its output; 0 when the user turned audio off.
 	audioDevice string
-	devicesSeen bool
+	devices     string
 	audioTrack  int
 	// titles names items opened by address, which mpv would show as
 	// the address (see Name).
