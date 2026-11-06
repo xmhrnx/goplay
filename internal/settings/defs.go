@@ -38,6 +38,9 @@ const (
 	// KeyVolume stores the last volume (percent) for KeyRememberVolume.
 	// It has no Def: it isn't shown in the dialog.
 	KeyVolume = "volume"
+	// KeySubtitleChoice stores the subtitle track last picked, as a
+	// player.TrackChoice in JSON, to pick in every file after.
+	KeySubtitleChoice = "subtitle_choice"
 )
 
 // languages are the choices for the preferred audio and subtitle

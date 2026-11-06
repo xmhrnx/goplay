@@ -303,13 +303,13 @@ func (a *App) scaleSubs(d float64) {
 func (a *App) toggleSubtitles() {
 	st := &a.player.State
 	if _, on := st.SelectedTrack(player.Subtitle); on {
-		a.player.SelectTrack(player.Subtitle, 0)
+		a.pickTrack(player.Subtitle, 0)
 		a.osd(tr("Subtitles off"))
 		return
 	}
 	subs := st.TracksOf(player.Subtitle)
 	if len(subs) > 0 {
-		a.player.SelectTrack(player.Subtitle, subs[0].ID)
+		a.pickTrack(player.Subtitle, subs[0].ID)
 		a.osd(tr("Subtitles: {track}", "track", subs[0].Name()))
 	}
 }
@@ -332,13 +332,13 @@ func (a *App) cycleTrack(k player.TrackKind) {
 	next := idx + 1
 	if next >= len(tracks) {
 		if k == player.Subtitle {
-			a.player.SelectTrack(k, 0)
+			a.pickTrack(k, 0)
 			a.osd(tr("Subtitles off"))
 			return
 		}
 		next = 0
 	}
-	a.player.SelectTrack(k, tracks[next].ID)
+	a.pickTrack(k, tracks[next].ID)
 	label := map[player.TrackKind]string{player.Video: tr("Video"), player.Audio: tr("Audio"), player.Subtitle: tr("Subtitles")}[k]
 	a.osd(tr("{kind}: {track}", "kind", label, "track", tracks[next].Name()))
 }

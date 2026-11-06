@@ -92,6 +92,10 @@ type App struct {
 	stereo stereoState
 	cast   castState
 
+	// audioChoice is the audio track the viewer last picked, played in
+	// the files after it until GoPlay closes (see pickTrack).
+	audioChoice atomic.Pointer[player.TrackChoice]
+
 	// lastPath and lastPos remember the file being played, for the
 	// recent list when it ends.
 	lastPath  string
@@ -480,6 +484,7 @@ func (a *App) fileLoaded() {
 	st := &a.player.State
 	a.history.Played(library.Recent{Path: st.Path, Title: titleFor(st)})
 	a.history.Save()
+	a.applyTrackChoices()
 	a.stereoFileLoaded()
 	a.ui.fileLoaded()
 	if cmds := a.startupCommands; cmds != nil {

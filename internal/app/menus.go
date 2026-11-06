@@ -75,7 +75,7 @@ func (u *ui) trackMenu(m *menu.Menu, k player.TrackKind) {
 		}
 	}
 	if k == player.Subtitle {
-		radio(m, tr("Off"), selected(0), func() { a.player.SelectTrack(k, 0) })
+		radio(m, tr("Off"), selected(0), func() { a.pickTrack(k, 0) })
 	}
 	if len(tracks) == 0 && k != player.Subtitle {
 		m.DisabledItem(tr("No tracks"))
@@ -83,7 +83,7 @@ func (u *ui) trackMenu(m *menu.Menu, k player.TrackKind) {
 	}
 	for _, t := range tracks {
 		id := t.ID
-		radio(m, ellipsize(t.Name(), 52), selected(id), func() { a.player.SelectTrack(k, id) })
+		radio(m, ellipsize(t.Name(), 52), selected(id), func() { a.pickTrack(k, id) })
 	}
 }
 
