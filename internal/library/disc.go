@@ -20,11 +20,24 @@ import (
 // DiscKind is the kind of disc at a path.
 type DiscKind int
 
+// DiscTitle is one of a Blu-ray's titles, as mpv names it among the
+// editions: "title: 91 (00:05:33.333) (00965.mpls)".
+type DiscTitle struct {
+	Number int
+	Length time.Duration
+}
+
 const (
 	NoDisc DiscKind = iota
 	DVD
 	BluRay
 )
+
+// MinDiscTitle is how long a title must be to list: a Blu-ray has
+// dozens of shorter ones, menu backgrounds, logos and warnings.
+const MinDiscTitle = time.Minute
+
+var discTitleRE = regexp.MustCompile(`^title: (\d+) \((\d+):(\d+):(\d+(?:\.\d+)?)\)`)
 
 // Disc tells whether path is a DVD or Blu-ray: a disc's root folder
 // (in a drive or copied), its VIDEO_TS or BDMV folder, or an .iso
@@ -84,43 +97,6 @@ func DiscName(u string) string {
 	return filepath.Base(dev)
 }
 
-// Discs lists the discs in the computer's drives (or mounted images):
-// the roots of the mounted volumes holding a DVD or Blu-ray.
-func Discs() []string {
-	var roots []string
-	switch runtime.GOOS {
-	case "windows":
-		for c := 'A'; c <= 'Z'; c++ {
-			roots = append(roots, string(c)+`:\`)
-		}
-	case "darwin":
-		roots = subdirs("/Volumes")
-	default:
-		user := os.Getenv("USER")
-		for _, d := range []string{"/media/" + user, "/run/media/" + user, "/media", "/mnt"} {
-			roots = append(roots, subdirs(d)...)
-		}
-	}
-	var discs []string
-	for _, r := range roots {
-		if k, root := Disc(r); k != NoDisc && root == r {
-			discs = append(discs, r)
-		}
-	}
-	return discs
-}
-
-func subdirs(dir string) []string {
-	entries, _ := os.ReadDir(dir)
-	var out []string
-	for _, e := range entries {
-		if e.IsDir() {
-			out = append(out, filepath.Join(dir, e.Name()))
-		}
-	}
-	return out
-}
-
 // entry finds name in dir ignoring case (discs copied or mounted on some
 // systems show their names in lower case), returning its path.
 func entry(dir, name string) string {
@@ -158,19 +134,6 @@ func imageKind(path string, size int64) DiscKind {
 	}
 	return DVD
 }
-
-// DiscTitle is one of a Blu-ray's titles, as mpv names it among the
-// editions: "title: 91 (00:05:33.333) (00965.mpls)".
-type DiscTitle struct {
-	Number int
-	Length time.Duration
-}
-
-// MinDiscTitle is how long a title must be to list: a Blu-ray has
-// dozens of shorter ones, menu backgrounds, logos and warnings.
-const MinDiscTitle = time.Minute
-
-var discTitleRE = regexp.MustCompile(`^title: (\d+) \((\d+):(\d+):(\d+(?:\.\d+)?)\)`)
 
 // ParseDiscTitle reads an edition name mpv gave a Blu-ray title.
 func ParseDiscTitle(s string) (DiscTitle, bool) {

@@ -151,26 +151,3 @@ func (p *prefsView) pageContent() elements.Element {
 	}
 	return elements.Box(styles.Styles{Width: -1, FlexDirection: properties.FlexDirectionColumn, Gap: 4, Padding: properties.Inset{Right: 12, Bottom: 12}}, rows...)
 }
-
-// audioDevices lists mpv's outputs for the device setting.
-func (a *App) audioDevices() []settings.Option {
-	out := []settings.Option{{Label: "Automatic", Value: "auto"}}
-	var list []struct {
-		Name        string `json:"name"`
-		Description string `json:"description"`
-	}
-	if a.player.Handle().JSON("audio-device-list", &list) != nil {
-		return out
-	}
-	for _, d := range list {
-		if d.Name == "" || d.Name == "auto" {
-			continue
-		}
-		label := d.Description
-		if label == "" {
-			label = d.Name
-		}
-		out = append(out, settings.Option{Label: label, Value: d.Name})
-	}
-	return out
-}

@@ -74,6 +74,20 @@ type Def struct {
 	Restart bool
 }
 
+// Store holds the current values. Changes are saved by Flush, which the
+// app calls periodically and on exit, so dragging a slider doesn't
+// rewrite the file every frame. It is safe for concurrent use.
+type Store struct {
+	mu     sync.Mutex
+	path   string
+	values map[string]string
+	dirty  bool
+}
+
+// utf8BOM is the byte-order mark some editors (Windows Notepad) write
+// at the start of UTF-8 files.
+var utf8BOM = []byte{0xEF, 0xBB, 0xBF}
+
 // MPVOptions is the mpv options the setting's value v sets.
 func (d *Def) MPVOptions(v string) []MPVOption {
 	switch {
@@ -113,16 +127,6 @@ func ConfigDir() (string, error) {
 		return "", err
 	}
 	return filepath.Join(dir, "goplay"), nil
-}
-
-// Store holds the current values. Changes are saved by Flush, which the
-// app calls periodically and on exit, so dragging a slider doesn't
-// rewrite the file every frame. It is safe for concurrent use.
-type Store struct {
-	mu     sync.Mutex
-	path   string
-	values map[string]string
-	dirty  bool
 }
 
 // Load reads the settings saved at path. A missing file yields the
@@ -256,57 +260,3 @@ func (s *Store) GroupOption(group string) MPVOption {
 	}
 	return MPVOption{group, strings.Join(parts, ",")}
 }
-
-// Keys returns the user's key bindings for an action, or nil when they
-// haven't changed the defaults. Bindings are stored as "key.<action>",
-// a comma-separated list of shortcuts ("Ctrl+O, F1"); "none" unbinds.
-func (s *Store) Keys(action string) ([]string, bool) {
-	s.mu.Lock()
-	v, ok := s.values["key."+action]
-	s.mu.Unlock()
-	if !ok {
-		return nil, false
-	}
-	if v == "none" {
-		return []string{}, true
-	}
-	var out []string
-	for _, k := range strings.Split(v, ",") {
-		if k = strings.TrimSpace(k); k != "" {
-			out = append(out, k)
-		}
-	}
-	return out, true
-}
-
-// SetKeys stores the bindings for an action; nil restores the default.
-func (s *Store) SetKeys(action string, keys []string) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	k := "key." + action
-	switch {
-	case keys == nil:
-		delete(s.values, k)
-	case len(keys) == 0:
-		s.values[k] = "none"
-	default:
-		s.values[k] = strings.Join(keys, ", ")
-	}
-	s.dirty = true
-}
-
-// ResetKeys restores every default key binding.
-func (s *Store) ResetKeys() {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	for k := range s.values {
-		if strings.HasPrefix(k, "key.") {
-			delete(s.values, k)
-			s.dirty = true
-		}
-	}
-}
-
-// utf8BOM is the byte-order mark some editors (Windows Notepad) write
-// at the start of UTF-8 files.
-var utf8BOM = []byte{0xEF, 0xBB, 0xBF}

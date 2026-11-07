@@ -1,23 +1,14 @@
 package player
 
 import (
-	"encoding/json"
-	"math"
 	"strconv"
 	"strings"
 
 	"github.com/xmhrnx/giode/i18n"
-	"github.com/mehran9675/goplay/internal/mpv"
 )
 
 // TrackKind is a track type, named as mpv names it.
 type TrackKind string
-
-const (
-	Video    TrackKind = "video"
-	Audio    TrackKind = "audio"
-	Subtitle TrackKind = "sub"
-)
 
 // Track is one video, audio or subtitle track of the current file.
 type Track struct {
@@ -41,6 +32,72 @@ type Track struct {
 	// 0 for the primary track, 1 for the secondary subtitle.
 	MainSelection int `json:"main-selection"`
 }
+
+// Chapter is a chapter of the current file.
+type Chapter struct {
+	Title string  `json:"title"`
+	Time  float64 `json:"time"`
+}
+
+// Edition is one of the file's editions: a Matroska file's alternative
+// cuts, or a DVD's or Blu-ray's titles.
+type Edition struct {
+	ID    int    `json:"id"`
+	Title string `json:"title"`
+}
+
+// PlaylistEntry is one entry of mpv's playlist.
+type PlaylistEntry struct {
+	Filename string `json:"filename"`
+	Title    string `json:"title"`
+	Current  bool   `json:"current"`
+}
+
+// State mirrors the player's observed properties. It is updated on the
+// UI goroutine by Player.Process and read freely there.
+type State struct {
+	Path  string
+	Title string
+	// Idle is true with nothing loaded.
+	Idle bool
+	// Loading is true from opening a file until it starts playing.
+	Loading bool
+
+	Duration, Position float64
+	Paused, Buffering  bool
+	EOF, Seekable      bool
+	// CacheAhead is how many seconds are buffered ahead of the position.
+	CacheAhead float64
+	// CacheRanges are the buffered, seekable time ranges (streams).
+	CacheRanges [][2]float64
+
+	Volume, VolumeMax float64 // percent
+	Muted             bool
+	Speed             float64
+
+	Tracks       []Track
+	Chapters     []Chapter
+	Chapter      int // -1 before the first chapter or without chapters
+	Editions     []Edition
+	Edition      int // the playing edition's ID
+	Playlist     []PlaylistEntry
+	PlaylistPos  int
+	VideoW       int
+	VideoH       int
+	ABLoopA      float64 // NaN when unset
+	ABLoopB      float64
+	LoopFile     bool
+	LoopPlaylist bool
+	SubDelay     float64
+	AudioDelay   float64
+	Hwdec        string
+}
+
+const (
+	Video    TrackKind = "video"
+	Audio    TrackKind = "audio"
+	Subtitle TrackKind = "sub"
+)
 
 // Name is a readable label: the title (or file name of an external
 // track), the codec and size for video, and the language.
@@ -89,72 +146,12 @@ func baseName(p string) string {
 	return p
 }
 
-// Chapter is a chapter of the current file.
-type Chapter struct {
-	Title string  `json:"title"`
-	Time  float64 `json:"time"`
-}
-
-// Edition is one of the file's editions: a Matroska file's alternative
-// cuts, or a DVD's or Blu-ray's titles.
-type Edition struct {
-	ID    int    `json:"id"`
-	Title string `json:"title"`
-}
-
-// PlaylistEntry is one entry of mpv's playlist.
-type PlaylistEntry struct {
-	Filename string `json:"filename"`
-	Title    string `json:"title"`
-	Current  bool   `json:"current"`
-}
-
 // Name is the entry's title, or its file name.
 func (e PlaylistEntry) Name() string {
 	if e.Title != "" {
 		return e.Title
 	}
 	return baseName(strings.TrimRight(e.Filename, `/\`))
-}
-
-// State mirrors the player's observed properties. It is updated on the
-// UI goroutine by Player.Process and read freely there.
-type State struct {
-	Path  string
-	Title string
-	// Idle is true with nothing loaded.
-	Idle bool
-	// Loading is true from opening a file until it starts playing.
-	Loading bool
-
-	Duration, Position float64
-	Paused, Buffering  bool
-	EOF, Seekable      bool
-	// CacheAhead is how many seconds are buffered ahead of the position.
-	CacheAhead float64
-	// CacheRanges are the buffered, seekable time ranges (streams).
-	CacheRanges [][2]float64
-
-	Volume, VolumeMax float64 // percent
-	Muted             bool
-	Speed             float64
-
-	Tracks       []Track
-	Chapters     []Chapter
-	Chapter      int // -1 before the first chapter or without chapters
-	Editions     []Edition
-	Edition      int // the playing edition's ID
-	Playlist     []PlaylistEntry
-	PlaylistPos  int
-	VideoW       int
-	VideoH       int
-	ABLoopA      float64 // NaN when unset
-	ABLoopB      float64
-	LoopFile     bool
-	LoopPlaylist bool
-	SubDelay     float64
-	AudioDelay   float64
-	Hwdec        string
 }
 
 // HasVideo reports whether the file has a (non-cover-art) video track
@@ -208,110 +205,4 @@ func (s *State) ChapterAt(t float64) int {
 		}
 	}
 	return idx
-}
-
-// observed lists the properties the player follows, the format each is
-// delivered in, and how it updates State. Lists are observed without a
-// format and re-read as JSON when they change.
-var observed = []struct {
-	name   string
-	format mpv.Format
-	apply  func(p *Player, ev *mpv.Event)
-}{
-	{"path", mpv.FormatString, func(p *Player, ev *mpv.Event) {
-		p.State.Path = ev.String
-		if t := p.titles[ev.String]; t != "" {
-			p.State.Title = t
-		}
-	}},
-	{"media-title", mpv.FormatString, func(p *Player, ev *mpv.Event) { p.State.Title = p.titleOf(p.State.Path, ev.String) }},
-	{"idle-active", mpv.FormatFlag, func(p *Player, ev *mpv.Event) {
-		p.State.Idle = ev.Flag
-		if ev.Flag {
-			p.State.Loading = false
-		}
-	}},
-	{"duration", mpv.FormatDouble, func(p *Player, ev *mpv.Event) { p.State.Duration = ev.Double }},
-	{"time-pos", mpv.FormatDouble, func(p *Player, ev *mpv.Event) { p.State.Position = ev.Double }},
-	{"pause", mpv.FormatFlag, func(p *Player, ev *mpv.Event) { p.State.Paused = ev.Flag }},
-	{"paused-for-cache", mpv.FormatFlag, func(p *Player, ev *mpv.Event) { p.State.Buffering = ev.Flag }},
-	{"eof-reached", mpv.FormatFlag, func(p *Player, ev *mpv.Event) { p.State.EOF = ev.Flag }},
-	{"seekable", mpv.FormatFlag, func(p *Player, ev *mpv.Event) { p.State.Seekable = ev.Flag }},
-	{"demuxer-cache-duration", mpv.FormatDouble, func(p *Player, ev *mpv.Event) { p.State.CacheAhead = ev.Double }},
-	{"demuxer-cache-state", mpv.FormatNone, func(p *Player, ev *mpv.Event) { p.readCacheRanges() }},
-	{"volume", mpv.FormatDouble, func(p *Player, ev *mpv.Event) { p.State.Volume = ev.Double }},
-	{"volume-max", mpv.FormatDouble, func(p *Player, ev *mpv.Event) { p.State.VolumeMax = ev.Double }},
-	{"mute", mpv.FormatFlag, func(p *Player, ev *mpv.Event) { p.State.Muted = ev.Flag }},
-	{"speed", mpv.FormatDouble, func(p *Player, ev *mpv.Event) { p.State.Speed = ev.Double }},
-	{"track-list", mpv.FormatNone, func(p *Player, ev *mpv.Event) {
-		p.State.Tracks = nil
-		p.h.JSON("track-list", &p.State.Tracks)
-		p.noteAudioTrack()
-	}},
-	{"audio-device-list", mpv.FormatNone, func(p *Player, ev *mpv.Event) { p.audioDevicesChanged() }},
-	{"chapter-list", mpv.FormatNone, func(p *Player, ev *mpv.Event) {
-		p.State.Chapters = nil
-		p.h.JSON("chapter-list", &p.State.Chapters)
-	}},
-	{"chapter", mpv.FormatInt64, func(p *Player, ev *mpv.Event) { p.State.Chapter = intOr(ev, -1) }},
-	{"edition-list", mpv.FormatNone, func(p *Player, ev *mpv.Event) {
-		p.State.Editions = nil
-		p.h.JSON("edition-list", &p.State.Editions)
-	}},
-	{"current-edition", mpv.FormatInt64, func(p *Player, ev *mpv.Event) { p.State.Edition = intOr(ev, 0) }},
-	{"playlist", mpv.FormatNone, func(p *Player, ev *mpv.Event) {
-		p.State.Playlist = nil
-		p.h.JSON("playlist", &p.State.Playlist)
-		for i, e := range p.State.Playlist {
-			if e.Title == "" {
-				p.State.Playlist[i].Title = p.titles[e.Filename]
-			}
-		}
-	}},
-	{"playlist-pos", mpv.FormatInt64, func(p *Player, ev *mpv.Event) { p.State.PlaylistPos = intOr(ev, -1) }},
-	{"dwidth", mpv.FormatInt64, func(p *Player, ev *mpv.Event) { p.State.VideoW = intOr(ev, 0) }},
-	{"dheight", mpv.FormatInt64, func(p *Player, ev *mpv.Event) { p.State.VideoH = intOr(ev, 0) }},
-	{"ab-loop-a", mpv.FormatString, func(p *Player, ev *mpv.Event) { p.State.ABLoopA = parseTime(ev.String) }},
-	{"ab-loop-b", mpv.FormatString, func(p *Player, ev *mpv.Event) { p.State.ABLoopB = parseTime(ev.String) }},
-	{"loop-file", mpv.FormatString, func(p *Player, ev *mpv.Event) { p.State.LoopFile = isLooping(ev.String) }},
-	{"loop-playlist", mpv.FormatString, func(p *Player, ev *mpv.Event) { p.State.LoopPlaylist = isLooping(ev.String) }},
-	{"sub-delay", mpv.FormatDouble, func(p *Player, ev *mpv.Event) { p.State.SubDelay = ev.Double }},
-	{"audio-delay", mpv.FormatDouble, func(p *Player, ev *mpv.Event) { p.State.AudioDelay = ev.Double }},
-	{"hwdec-current", mpv.FormatString, func(p *Player, ev *mpv.Event) { p.State.Hwdec = ev.String }},
-}
-
-func intOr(ev *mpv.Event, def int) int {
-	if ev.Format != mpv.FormatInt64 {
-		return def
-	}
-	return int(ev.Int)
-}
-
-// parseTime parses an A-B loop point; "no" and unset give NaN.
-func parseTime(s string) float64 {
-	f, err := strconv.ParseFloat(s, 64)
-	if err != nil {
-		return math.NaN()
-	}
-	return f
-}
-
-func isLooping(s string) bool { return s != "" && s != "no" }
-
-// readCacheRanges reads the buffered ranges from demuxer-cache-state.
-func (p *Player) readCacheRanges() {
-	var st struct {
-		Ranges []struct {
-			Start float64 `json:"start"`
-			End   float64 `json:"end"`
-		} `json:"seekable-ranges"`
-	}
-	p.State.CacheRanges = p.State.CacheRanges[:0]
-	s, ok := p.h.String("demuxer-cache-state")
-	if !ok || json.Unmarshal([]byte(s), &st) != nil {
-		return
-	}
-	for _, r := range st.Ranges {
-		p.State.CacheRanges = append(p.State.CacheRanges, [2]float64{r.Start, r.End})
-	}
 }

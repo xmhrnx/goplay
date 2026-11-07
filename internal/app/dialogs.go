@@ -25,15 +25,15 @@ type modal struct {
 	dlg  *dialog.Dialog
 }
 
-func (m *modal) layout(gtx layout.Context) { m.dlg.Layout(gtx) }
-func (m *modal) isOpen() bool              { return m.open }
-func (m *modal) close()                    { m.open = false }
-
 type window interface {
 	layout(gtx layout.Context)
 	isOpen() bool
 	close()
 }
+
+func (m *modal) layout(gtx layout.Context) { m.dlg.Layout(gtx) }
+func (m *modal) isOpen() bool              { return m.open }
+func (m *modal) close()                    { m.open = false }
 
 func newDialogs(u *ui) *dialogs {
 	return &dialogs{

@@ -7,19 +7,12 @@ import (
 
 	"gioui.org/f32"
 	"gioui.org/gesture"
-	"gioui.org/io/event"
-	"gioui.org/io/pointer"
-	"gioui.org/layout"
-	"gioui.org/op"
-	"gioui.org/op/clip"
-	"gioui.org/op/paint"
 
 	"github.com/xmhrnx/giode"
 	"github.com/xmhrnx/giode/components/drawer"
 	"github.com/xmhrnx/giode/components/menu"
 	"github.com/xmhrnx/giode/components/titlebar"
 	"github.com/xmhrnx/giode/components/toaster"
-	"github.com/xmhrnx/giode/elements"
 	"github.com/xmhrnx/giode/styles"
 	"github.com/xmhrnx/giode/styles/properties"
 
@@ -197,109 +190,6 @@ func (u *ui) hideDelay() time.Duration {
 	return time.Duration(s * float64(time.Second))
 }
 
-// trackPointer follows the pointer over the whole window, without
-// taking its events from anything: where it is (for the context menu)
-// and when it last moved. Over playing video in overlay mode it hides
-// once it rests for a moment, as in every player.
-func (u *ui) trackPointer(gtx layout.Context) {
-	area := clip.Rect{Max: gtx.Constraints.Max}.Push(gtx.Ops)
-	pass := pointer.PassOp{}.Push(gtx.Ops)
-	event.Op(gtx.Ops, &u.pointerTag)
-	for {
-		ev, ok := gtx.Event(pointer.Filter{Target: &u.pointerTag, Kinds: pointer.Move | pointer.Drag | pointer.Press | pointer.Scroll})
-		if !ok {
-			break
-		}
-		if e, ok := ev.(pointer.Event); ok {
-			u.lastPointer = e.Position
-			u.lastMove = time.Now()
-		}
-	}
-	st := &u.a.player.State
-	u.cursorHidden = u.overlay() && !st.Idle && !st.Paused && !u.topShown && !u.bottomShown && !u.modalOpen() &&
-		time.Since(u.lastMove) >= u.hideDelay()
-	if u.cursorHidden {
-		pointer.CursorNone.Add(gtx.Ops)
-	}
-	pass.Pop()
-	area.Pop()
-}
-
-// layout draws the whole UI.
-func (u *ui) layout(gtx layout.Context) {
-	fb := gtx.Constraints.Max
-	overlay := u.overlay()
-	titleH, barH := u.titleHeightPx(), u.barHeightPx()
-	st := &u.a.player.State
-
-	// Overlay mode: hovering a strip shows its bar. Menus and drags
-	// keep the bottom bar up; with nothing loaded both bars stay.
-	topZone := image.Rect(0, 0, fb.X, titleH+u.dp(16))
-	bottomZone := image.Rect(0, fb.Y-barH-u.dp(8), fb.X, fb.Y)
-	topHovered := u.topHover.Update(gtx.Source)
-	bottomHovered := u.bottomHover.Update(gtx.Source)
-	u.topShown = !overlay || st.Idle || topHovered
-	u.bottomShown = !overlay || st.Idle || bottomHovered || u.bar.busy() || (u.menu != nil && u.menu.Opened())
-	if u.a.g.Fullscreen() && !st.Idle {
-		u.topShown = u.topShown && topHovered
-	}
-	if st.Idle || u.a.casting() {
-		// mpv draws nothing then; the window shows through.
-		paint.Fill(gtx.Ops, properties.CalcColor(colBackground))
-	}
-
-	// The video area, with everything drawn over the picture.
-	place(gtx, u.videoRect, u.video)
-
-	// The bars.
-	if u.topShown {
-		u.title.Title(u.windowTitle())
-		place(gtx, image.Rect(0, 0, fb.X, titleH), u.titleBar(overlay))
-	}
-	if u.bottomShown {
-		place(gtx, image.Rect(0, fb.Y-barH, fb.X, fb.Y), u.bar.element(overlay, fb.X))
-	}
-	if overlay {
-		// Hover zones go on top and pass events through, so moving onto
-		// a bar's buttons still counts as hovering its strip.
-		zone(gtx, topZone, &u.topHover)
-		zone(gtx, bottomZone, &u.bottomHover)
-	}
-
-	u.drawer.Layout(gtx)
-	u.dialogs.layout(gtx)
-	if u.menu != nil {
-		u.menu.Layout(gtx)
-	}
-	u.toasts.Layout(gtx)
-	u.trackPointer(gtx)
-}
-
-// place lays el out exactly filling r, with AbsolutePosition kept in
-// step so popups inside it open in the right spot.
-func place(gtx layout.Context, r image.Rectangle, el elements.Element) layout.Dimensions {
-	if r.Empty() {
-		return layout.Dimensions{}
-	}
-	t := op.Offset(r.Min).Push(gtx.Ops)
-	pop := elements.PushOffset(r.Min)
-	cgtx := gtx
-	cgtx.Constraints = layout.Exact(r.Size())
-	dims := el.Layout(cgtx)
-	pop()
-	t.Pop()
-	return dims
-}
-
-// zone registers a pass-through hover area.
-func zone(gtx layout.Context, r image.Rectangle, h *gesture.Hover) {
-	area := clip.Rect(r).Push(gtx.Ops)
-	pass := pointer.PassOp{}.Push(gtx.Ops)
-	h.Add(gtx.Ops)
-	pass.Pop()
-	area.Pop()
-}
-
 // modalOpen reports whether a dialog takes the keyboard.
 func (u *ui) modalOpen() bool { return u.dialogs.anyOpen() }
 
@@ -340,36 +230,3 @@ func (u *ui) fileLoaded() {
 	u.a.Post(u.a.sizeToVideo)
 	u.panel.scrollToCurrent()
 }
-
-// On-screen display.
-
-const (
-	osdDuration   = 1400 * time.Millisecond
-	flashDuration = 500 * time.Millisecond
-)
-
-// osd briefly shows a message over the video.
-func (a *App) osd(text string) { a.osdLevel(text, -1) }
-
-// osdLevel shows a message with a level bar (volume), level from 0 to 1.
-func (a *App) osdLevel(text string, level float64) {
-	if !a.settings.Bool(settings.KeyOSD) {
-		return
-	}
-	u := a.ui
-	u.osdText, u.osdLevel, u.osdUntil = text, level, time.Now().Add(osdDuration)
-	a.dirty = true
-}
-
-// flashPlayPause shows a large play or pause symbol fading out in the
-// middle of the picture.
-func (u *ui) flashPlayPause(playing bool) {
-	u.flash = "pause"
-	if playing {
-		u.flash = "play"
-	}
-	u.flashAt = time.Now()
-}
-
-func (a *App) toast(msg string)      { a.ui.toasts.Show(toaster.Info, msg) }
-func (a *App) toastError(msg string) { a.ui.toasts.Show(toaster.Error, msg) }
