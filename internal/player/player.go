@@ -111,7 +111,7 @@ func New(cfg Config) (*Player, error) {
 	p.State.Chapter = -1
 	p.State.PlaylistPos = -1
 
-	base := append([]Option(nil), baseOptions...)
+	base := append(append([]Option(nil), baseOptions...), platformOptions...)
 	if pics := picturesDir(); pics != "" {
 		base = append(base, Option{"screenshot-dir", pics})
 	}
