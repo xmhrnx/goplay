@@ -15,9 +15,11 @@ func osdView(u *ui) elements.Element {
 	}
 	children := []elements.Element{elements.Text(u.osdText, styles.Styles{Color: colText, FontSize: 15, FontWeight: properties.FontWeightMedium})}
 	if u.osdLevel >= 0 {
-		children = append(children, progress.Progress(float32(u.osdLevel), styles.Styles{
-			Width: 160, Height: 4, Color: colHighlight, Background: colTrack, BorderRadius: 2,
-		}))
+		// The bar fills the width it's given, so a box sets it.
+		children = append(children, elements.Box(styles.Styles{Width: 160},
+			progress.Progress(float32(u.osdLevel), styles.Styles{
+				Height: 4, Color: colHighlight, Background: colTrack, BorderRadius: 2,
+			})))
 	}
 	return elements.Box(styles.Styles{Position: properties.PositionAbsolute, Top: properties.Top(top), Left: 0, Right: 0,
 		Width: -1, Justify: properties.JustifyCenter},
