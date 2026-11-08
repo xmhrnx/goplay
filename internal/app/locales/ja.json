@@ -240,6 +240,7 @@
  "Hue": "色相",
  "Output device": "出力デバイス",
  "Preferred language": "優先言語",
+ "Prefer the app's language": "アプリの言語を優先",
  "Channels": "チャンネル",
  "Pass surround sound to the receiver": "サラウンドサウンドを受信機に渡します",
  "Sends Dolby and DTS audio undecoded over HDMI or S/PDIF.": "HDMI または S/PDIF を介して、デコードされていないドルビーおよび DTS オーディオを送信します。",

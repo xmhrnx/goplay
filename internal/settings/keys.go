@@ -16,6 +16,8 @@ const (
 	KeySeekStep        = "seek_step"
 	KeySeekStepLarge   = "seek_step_large"
 	KeyVolumeStep      = "volume_step"
+	KeyAudioLang       = "alang"
+	KeyAudioMatchUI    = "audio_match_ui"
 	KeyAudioDevice     = "audio_device"
 	KeyAuto3D          = "auto_3d"
 	KeyStereoView      = "stereo_view"

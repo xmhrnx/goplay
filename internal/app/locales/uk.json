@@ -246,6 +246,7 @@
  "Hue": "Відтінок",
  "Output device": "Пристрій виведення",
  "Preferred language": "Бажана мова",
+ "Prefer the app's language": "Надавати перевагу мові застосунку",
  "Channels": "Канали",
  "Pass surround sound to the receiver": "Передавати об'ємний звук на ресивер",
  "Sends Dolby and DTS audio undecoded over HDMI or S/PDIF.": "Надсилає звук Dolby і DTS без декодування через HDMI або S/PDIF.",

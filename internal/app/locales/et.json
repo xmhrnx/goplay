@@ -240,6 +240,7 @@
  "Hue": "Toon",
  "Output device": "Väljundseade",
  "Preferred language": "Eelistatud keel",
+ "Prefer the app's language": "Eelista rakenduse keelt",
  "Channels": "Kanalid",
  "Pass surround sound to the receiver": "Edasta ruumiline heli võimendile",
  "Sends Dolby and DTS audio undecoded over HDMI or S/PDIF.": "Saadab Dolby ja DTS heli dekodeerimata HDMI või S/PDIF kaudu.",

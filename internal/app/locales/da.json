@@ -240,6 +240,7 @@
  "Hue": "Farvetone",
  "Output device": "Outputenhed",
  "Preferred language": "Foretrukket sprog",
+ "Prefer the app's language": "Foretræk appens sprog",
  "Channels": "Kanaler",
  "Pass surround sound to the receiver": "Send surroundlyd videre til receiveren",
  "Sends Dolby and DTS audio undecoded over HDMI or S/PDIF.": "Sender Dolby- og DTS-lyd uafkodet via HDMI eller S/PDIF.",

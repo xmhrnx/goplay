@@ -195,6 +195,7 @@ func (a *App) startPlayer() error {
 	for _, o := range a.settings.MPVOptions() {
 		opts = append(opts, player.Option{Name: o.Name, Value: o.Value})
 	}
+	opts = append(opts, player.Option{Name: "alang", Value: a.audioLanguages()})
 	if a.settings.Bool(settings.KeyRememberVolume) && a.settings.Get(settings.KeyVolume) != "" {
 		opts = append(opts, player.Option{Name: "volume", Value: a.settings.Get(settings.KeyVolume)})
 	}

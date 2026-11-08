@@ -28,6 +28,10 @@ func (a *App) applySetting(key string) {
 	case settings.KeyLanguage:
 		giode.SetLocale(uiLocale(v))
 		a.rebuildUI()
+		a.player.Set("alang", a.audioLanguages())
+		return
+	case settings.KeyAudioLang, settings.KeyAudioMatchUI:
+		a.player.Set("alang", a.audioLanguages())
 		return
 	case settings.KeyAlwaysOnTop:
 		a.setOnTop(v == "yes")
@@ -61,4 +65,17 @@ func (a *App) applySetting(key string) {
 			a.toastError(tr("{setting}: mpv didn't accept {option}", "setting", tr(d.Label), "option", o.Name+"="+o.Value))
 		}
 	}
+}
+
+// audioLanguages is mpv's alang, the languages to prefer for audio: the
+// Preferred language, or else the app's own if that setting is on. Where
+// a file has none of them, mpv plays its default track.
+func (a *App) audioLanguages() string {
+	if v := a.settings.Get(settings.KeyAudioLang); v != "" {
+		return v
+	}
+	if a.settings.Bool(settings.KeyAudioMatchUI) {
+		return player.LanguageCodes(uiLocale(a.settings.Get(settings.KeyLanguage)))
+	}
+	return ""
 }

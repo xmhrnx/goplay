@@ -103,7 +103,8 @@ var Defs = []Def{
 	{Key: KeyAudioDevice, Section: "Audio", Label: "Output device", Kind: Choice, Default: "auto", MPV: "audio-device",
 		// The app replaces these with the devices mpv reports.
 		Options: []Option{{"Automatic", "auto"}}},
-	{Key: "alang", Section: "Audio", Label: "Preferred language", Kind: Choice, Default: "", MPV: "alang", Options: languages},
+	{Key: KeyAudioLang, Section: "Audio", Label: "Preferred language", Kind: Choice, Default: "", Options: languages},
+	{Key: KeyAudioMatchUI, Section: "Audio", Label: "Prefer the app's language", Kind: Toggle, Default: "yes"},
 	{Key: "audio_channels", Section: "Audio", Label: "Channels", Kind: Choice, Default: "auto-safe", MPV: "audio-channels",
 		Options: []Option{{"Automatic", "auto-safe"}, {"Automatic (any layout)", "auto"}, {"Stereo", "stereo"},
 			{"5.1", "5.1"}, {"7.1", "7.1"}}},

@@ -240,6 +240,7 @@
  "Hue": "Színárnyalat",
  "Output device": "Kimeneti eszköz",
  "Preferred language": "Előnyben részesített nyelv",
+ "Prefer the app's language": "Az alkalmazás nyelvének előnyben részesítése",
  "Channels": "Csatornák",
  "Pass surround sound to the receiver": "Térhatású hang továbbítása az erősítőnek",
  "Sends Dolby and DTS audio undecoded over HDMI or S/PDIF.": "A Dolby és DTS hangot dekódolás nélkül küldi HDMI-n vagy S/PDIF-en.",

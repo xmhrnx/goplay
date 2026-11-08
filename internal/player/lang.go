@@ -1,6 +1,7 @@
 package player
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/xmhrnx/giode/i18n"
@@ -27,7 +28,10 @@ func init() {
 		{"Spanish", "es", "spa"}, {"Swedish", "sv", "swe"}, {"Tamil", "ta", "tam"},
 		{"Telugu", "te", "tel"}, {"Thai", "th", "tha"}, {"Turkish", "tr", "tur"},
 		{"Ukrainian", "uk", "ukr"}, {"Urdu", "ur", "urd"}, {"Vietnamese", "vi", "vie"},
-		{"Filipino", "fil"}, {"Kurdish", "ku", "kur"}, {"Swahili", "sw", "swa"},
+		{"Filipino", "fil", "tl", "tgl"}, {"Kurdish", "ku", "kur"}, {"Swahili", "sw", "swa"},
+		{"Armenian", "hy", "arm", "hye"}, {"Georgian", "ka", "geo", "kat"}, {"Gujarati", "gu", "guj"},
+		{"Kannada", "kn", "kan"}, {"Malayalam", "ml", "mal"}, {"Marathi", "mr", "mar"},
+		{"Punjabi", "pa", "pan"},
 		{"Undetermined", "und"},
 	} {
 		for _, code := range l[1:] {
@@ -50,4 +54,23 @@ func LanguageName(code string) string {
 		return name + " (" + strings.ToUpper(region) + ")"
 	}
 	return name
+}
+
+// LanguageCodes is an mpv language list for locale ("pt", "zh-tw"): every
+// code tracks of its language may be tagged with, or "" when unknown.
+func LanguageCodes(locale string) string {
+	base, _, _ := strings.Cut(strings.ReplaceAll(strings.ToLower(locale), "_", "-"), "-")
+	name, ok := languages[base]
+	if !ok {
+		return ""
+	}
+	var codes []string
+	for code, n := range languages {
+		// Norwegian tracks are as often tagged plain "nor" as Bokmål.
+		if n == name || (name == "Norwegian Bokmål" && n == "Norwegian") {
+			codes = append(codes, code)
+		}
+	}
+	sort.Strings(codes)
+	return strings.Join(codes, ",")
 }
