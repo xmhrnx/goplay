@@ -8,7 +8,7 @@ import (
 
 func TestSame(t *testing.T) {
 	for _, c := range [][2]string{
-		{"ctrl+shift+o", "Mod+Shift+O"},
+		{"mod+shift+o", "Mod+Shift+O"},
 		{"Shift+Mod+O", "Mod+Shift+O"},
 		{"space", "Space"},
 		{"Alt+return", "Alt+Enter"},
@@ -53,8 +53,8 @@ func TestLookup(t *testing.T) {
 		&Action{ID: "open", Title: "Open File", Category: "File", Keys: []string{"Mod+O"}, Run: func() { ran = "open" }},
 		&Action{ID: "pause", Title: "Play or Pause", Category: "Playback", Keys: []string{"Space", "K"}, Run: func() { ran = "pause" }},
 	)
-	if a := r.Lookup(key.Event{Name: "O", Modifiers: key.ModCtrl}); a == nil || a.ID != "open" {
-		t.Fatalf("Ctrl+O = %v", a)
+	if a := r.Lookup(key.Event{Name: "O", Modifiers: key.ModShortcut}); a == nil || a.ID != "open" {
+		t.Fatalf("Mod+O = %v", a)
 	}
 	if a := r.Lookup(key.Event{Name: key.NameSpace}); a == nil || a.ID != "pause" {
 		t.Fatalf("Space = %v", a)
@@ -65,14 +65,14 @@ func TestLookup(t *testing.T) {
 
 	// Rebinding moves the shortcut.
 	r.SetCustom("open", []string{"F2"})
-	if a := r.Lookup(key.Event{Name: "O", Modifiers: key.ModCtrl}); a != nil {
+	if a := r.Lookup(key.Event{Name: "O", Modifiers: key.ModShortcut}); a != nil {
 		t.Error("old binding still active")
 	}
 	if a := r.Lookup(key.Event{Name: key.NameF2}); a == nil || a.ID != "open" {
 		t.Error("new binding missing")
 	}
 	r.SetCustom("open", nil)
-	if !r.Run(r.Lookup(key.Event{Name: "O", Modifiers: key.ModCtrl}).ID) || ran != "open" {
+	if !r.Run(r.Lookup(key.Event{Name: "O", Modifiers: key.ModShortcut}).ID) || ran != "open" {
 		t.Error("default binding not restored")
 	}
 }
