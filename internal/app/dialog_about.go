@@ -15,7 +15,7 @@ type aboutDialog struct {
 func newAboutDialog(u *ui) *aboutDialog {
 	a := u.a
 	d := &aboutDialog{}
-	site := secondaryButton(tr("Website"), func() { openWebPage("https://github.com/Mehran9675/goplay") })
+	site := secondaryButton(tr("Website"), func() { openWebPage("https://github.com/xmhrnx/goplay") })
 	closeBtn := primaryButton(tr("Close"), func() { d.open = false })
 	d.dlg = dialog.New(&d.open, func() elements.Element {
 		mpvVersion, _ := a.player.Get("mpv-version")

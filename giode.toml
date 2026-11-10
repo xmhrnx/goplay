@@ -1,4 +1,4 @@
-# Project file for the giode CLI (github.com/Mehran9675/giode-cli).
+# Project file for the giode CLI (github.com/xmhrnx/giode-cli).
 #
 #   giode run                   build and run on this computer
 #   giode build desktop         this computer's packages
@@ -20,7 +20,7 @@ icon = "assets/icon.png"
 package = "."
 publisher = "Mehran Zahiroddini"
 description = "A fast, beautiful video player that plays almost anything."
-website = "https://github.com/Mehran9675/goplay"
+website = "https://github.com/xmhrnx/goplay"
 renderer = "opengl"
 ldflags = "-X github.com/mehran9675/goplay/internal/app.Version={version}"
 

@@ -92,7 +92,7 @@ Advanced › Open Config Folder).
 ## Building
 
 You need Go 1.26+, a C compiler, pkg-config, libmpv's development files and
-the [giode CLI](https://github.com/Mehran9675/giode-cli), which builds and
+the [giode CLI](https://github.com/xmhrnx/giode-cli), which builds and
 packages GoPlay from `giode.toml`:
 
 ```sh
