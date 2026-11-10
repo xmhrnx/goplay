@@ -135,3 +135,17 @@ func TestAskAddressEmby(t *testing.T) {
 		t.Errorf("silent = %v, want [127.0.0.1:1]", silent)
 	}
 }
+
+// Emby gives its UUID with dashes over SSDP and without through its web
+// API: both are one server.
+func TestMediaServerSame(t *testing.T) {
+	ssdp := &MediaServer{ID: "upnp:uuid:a37ab41d-5835-4614-a997-fedb2d221560", browseURL: "http://h:8096/dlna/a37ab41d-5835-4614-a997-fedb2d221560/contentdirectory/control"}
+	api := &MediaServer{ID: "upnp:uuid:A37AB41D58354614A997FEDB2D221560", browseURL: "http://h:8096/dlna/a37ab41d58354614a997fedb2d221560/contentdirectory/control"}
+	other := &MediaServer{ID: "upnp:uuid:b37ab41d58354614a997fedb2d221560", browseURL: "http://h2/control"}
+	if !ssdp.Same(api) {
+		t.Error("the same UUID with and without dashes counts as two servers")
+	}
+	if ssdp.Same(other) {
+		t.Error("different servers count as one")
+	}
+}

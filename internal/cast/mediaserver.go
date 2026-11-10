@@ -57,7 +57,14 @@ const embyPort = "8096"
 
 // Same reports whether s and o are the same server.
 func (s *MediaServer) Same(o *MediaServer) bool {
-	return s.ID == o.ID || s.browseURL == o.browseURL
+	return s.key() == o.key() || s.browseURL == o.browseURL
+}
+
+// key identifies the server: its ID, with case and dashes ignored. Emby
+// gives the same UUID with dashes over SSDP and without through its web
+// API, each at its own description URL.
+func (s *MediaServer) key() string {
+	return strings.ToLower(strings.ReplaceAll(s.ID, "-", ""))
 }
 
 // DiscoverMediaServers looks for media servers until ctx ends, on the
@@ -79,8 +86,8 @@ func DiscoverMediaServers(ctx context.Context, addrs []string, found func(*Media
 		// A server answering on several interfaces, or both to the
 		// search and at a saved address, is listed once.
 		mu.Lock()
-		dup := seen[s.ID] || seen[s.browseURL]
-		seen[s.ID], seen[s.browseURL] = true, true
+		dup := seen[s.key()] || seen[s.browseURL]
+		seen[s.key()], seen[s.browseURL] = true, true
 		mu.Unlock()
 		if !dup {
 			found(s)
