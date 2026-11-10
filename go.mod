@@ -5,7 +5,7 @@ go 1.26.6
 require (
 	gioui.org v0.10.2
 	github.com/ncruces/zenity v0.10.15
-	github.com/xmhrnx/giode v1.0.4-alpha.1
+	github.com/xmhrnx/giode v1.0.5-alpha.1
 	golang.org/x/net v0.48.0
 )
 

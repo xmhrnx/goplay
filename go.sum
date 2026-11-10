@@ -42,8 +42,8 @@ github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef h1:Ch6Q+AZUxDBCVqd
 github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef/go.mod h1:nXTWP6+gD5+LUJ8krVhhoeHjvHTutPxMYl5SvkcnJNE=
 github.com/stretchr/testify v1.6.1 h1:hDPOHmpOpP40lSULcqw7IrRb/u7w6RpDC9399XyoNd0=
 github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
-github.com/xmhrnx/giode v1.0.4-alpha.1 h1:Qn6pVNaUjyIi62FifIeISQbzpOmi/d493X26uDtpHi4=
-github.com/xmhrnx/giode v1.0.4-alpha.1/go.mod h1:88XFQNpZw806ytdMrkUB2znIFm+n4OMxJBzKlRe5d5A=
+github.com/xmhrnx/giode v1.0.5-alpha.1 h1:gKFB9MgN4c4YVBGNKSFqsb6gwVVg0OlSHOzRnjRnnhg=
+github.com/xmhrnx/giode v1.0.5-alpha.1/go.mod h1:88XFQNpZw806ytdMrkUB2znIFm+n4OMxJBzKlRe5d5A=
 github.com/yuin/goldmark v1.4.13 h1:fVcFKWvrslecOb/tg+Cc05dkeYx540o0FuFt3nUVDoE=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 go.uber.org/goleak v1.3.0 h1:2K3zAYmnTNqV73imy9J1T3WC+gmCePx2hEGkimedGto=
