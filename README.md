@@ -5,6 +5,7 @@ those who want to tune everything. It plays almost any file or stream with
 mpv's engine, in an interface built with [Giode](https://github.com/xmhrnx/giode).
 
 Made for macOS first, and built for Windows and Linux too.
+Website: [xmhrnx.github.io/goplay](https://xmhrnx.github.io/goplay/).
 
 ## What it does
 

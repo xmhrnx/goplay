@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GoPlay — a video player that plays almost anything</title>
+<meta name="description" content="GoPlay is a video player for macOS, Windows and Linux, built on mpv: hardware decoding, subtitles, 3D and 360° video, and casting to Chromecast and DLNA.">
+<meta name="theme-color" content="#09090b">
+<meta name="color-scheme" content="dark">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* GoPlay's own palette: near-black surfaces, white for what matters,
+       no color but for status. The video is the color. */
+    --bg: #09090b;
+    --surface: #151518;
+    --surface2: #1d1d21;
+    --surface3: #26262b;
+    --border: #2c2c32;
+    --text: #ececef;
+    --muted: #9a9aa3;
+    --faint: #6b6b74;
+    --white: #ffffff;
+    --on: #30d158;
+    --display: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --sans: "Inter Tight", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --gutter: clamp(16px, 4vw, 48px);
+    --max: 1160px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 400 17px/1.6 var(--sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+
+  /* ---------- top bar ---------- */
+  .top {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  }
+  .top .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; letter-spacing: -0.01em; }
+  .brand img { width: 28px; height: 28px; }
+  .top nav { display: flex; gap: 24px; font-size: 15px; color: var(--muted); }
+  .top nav a { text-decoration: none; transition: color .2s; }
+  .top nav a:hover { color: var(--white); }
+  @media (max-width: 640px) { .top nav .opt { display: none; } }
+
+  /* ---------- hero ---------- */
+  .hero { padding: clamp(56px, 9vw, 120px) 0 40px; position: relative; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 500 13px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+  }
+  .eyebrow .rec { width: 8px; height: 8px; border-radius: 50%; background: var(--on); box-shadow: 0 0 0 4px #30d15822; }
+  h1 {
+    font: 400 clamp(64px, 10vw, 128px)/0.9 var(--display);
+    letter-spacing: -0.02em; margin: 22px 0 22px; color: var(--white);
+    display: flex; align-items: center; gap: .18em;
+  }
+  h1 img { width: .78em; height: .78em; flex: none; filter: drop-shadow(0 18px 40px #000a); }
+  .tagline { font-size: clamp(19px, 2.1vw, 23px); line-height: 1.45; color: var(--text); max-width: 32ch; margin: 0 0 14px; }
+  .tagline em { font: italic 400 1.18em/1 var(--display); color: var(--white); }
+  .sub { color: var(--muted); max-width: 46ch; margin: 0 0 32px; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 22px;
+    border-radius: 10px; font-weight: 600; font-size: 16px; text-decoration: none;
+    transition: transform .15s, background .2s, border-color .2s;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn.primary { background: var(--white); color: #0b0b0d; }
+  .btn.primary:hover { background: #e4e4e8; }
+  .btn.ghost { border: 1px solid var(--border); color: var(--text); }
+  .btn.ghost:hover { border-color: var(--faint); background: var(--surface); }
+  .btn svg { width: 18px; height: 18px; }
+
+  /* The "screen": a player window drawn in CSS. Its picture is the only
+     color on the page. */
+  .screen {
+    position: relative; border-radius: 14px; overflow: hidden;
+    background: var(--surface); border: 1px solid var(--border);
+    box-shadow: 0 40px 120px -30px #000, 0 0 0 1px #ffffff08 inset;
+  }
+  .screen .bar { height: 30px; display: flex; align-items: center; gap: 7px; padding: 0 12px; background: var(--bg); }
+  .screen .bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--surface3); display: block; }
+  .screen .bar span { margin-left: auto; margin-right: auto; font: 500 12px/1 var(--sans); color: var(--faint); padding-right: 40px; }
+  .picture {
+    aspect-ratio: 16 / 9; position: relative; overflow: hidden;
+    background:
+      radial-gradient(60% 80% at 22% 30%, #ff7a3d 0%, transparent 60%),
+      radial-gradient(55% 70% at 78% 35%, #7b5cff 0%, transparent 62%),
+      radial-gradient(70% 70% at 55% 100%, #00c2a8 0%, transparent 60%),
+      linear-gradient(160deg, #1b1030, #041a22);
+    animation: drift 18s ease-in-out infinite alternate;
+    background-size: 140% 140%;
+  }
+  .picture::after { /* letterbox grain */
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, #0000 0 2px, #00000014 2px 3px);
+    mix-blend-mode: multiply;
+  }
+  @keyframes drift { from { background-position: 0% 0%; } to { background-position: 100% 100%; } }
+  .subtitle {
+    position: absolute; left: 50%; bottom: 9%; transform: translateX(-50%); z-index: 1;
+    font: 500 clamp(12px, 1.4vw, 15px)/1.3 var(--sans); color: #fff; white-space: nowrap;
+    text-shadow: 0 0 3px #000, 0 1px 2px #000;
+  }
+  .osd {
+    position: absolute; right: 4%; top: 7%; z-index: 1;
+    font: 500 11px/1 var(--mono); color: #fff; background: #0009; padding: 6px 8px; border-radius: 6px;
+  }
+  .controls { padding: 14px 16px 16px; background: var(--bg); }
+  .timeline { position: relative; height: 4px; border-radius: 2px; background: #ffffff22; }
+  .timeline .buf { position: absolute; inset: 0 38% 0 0; background: #ffffff38; border-radius: 2px; }
+  .timeline .pos { position: absolute; inset: 0 58% 0 0; background: #fff; border-radius: 2px; }
+  .timeline .ab { position: absolute; left: 30%; width: 22%; top: -4px; bottom: -4px; border-left: 2px solid #fff8; border-right: 2px solid #fff8; }
+  .timeline .ch { position: absolute; top: 0; bottom: 0; width: 3px; background: var(--bg); }
+  .timeline .knob { position: absolute; left: 42%; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px #ffffff22; }
+  .timeline .tip {
+    position: absolute; left: 70%; bottom: 14px; transform: translateX(-50%);
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+    font: 500 11px/1 var(--mono); color: var(--text); padding: 6px 8px; white-space: nowrap;
+  }
+  .row { display: flex; align-items: center; gap: 16px; margin-top: 14px; color: var(--muted); font: 500 12px/1 var(--mono); }
+  .row .play { width: 34px; height: 34px; border-radius: 50%; background: #fff; display: grid; place-items: center; flex: none; }
+  .row .play::before { content: ""; width: 0; height: 0; border-left: 11px solid #0b0b0d; border-top: 7px solid transparent; border-bottom: 7px solid transparent; margin-left: 3px; }
+  .row .grow { flex: 1; }
+  .row b { color: var(--text); font-weight: 500; }
+
+  /* ---------- sections ---------- */
+  section { padding: clamp(64px, 9vw, 120px) 0; }
+  .kicker { font: 500 13px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+  h2 { font: 400 clamp(40px, 5.5vw, 68px)/1 var(--display); letter-spacing: -0.015em; margin: 14px 0 18px; color: var(--white); }
+  h2 em { font-style: italic; color: var(--muted); }
+  .lede { color: var(--muted); max-width: 60ch; margin: 0; font-size: 18px; }
+
+  /* Feature reel: frames on a film strip */
+  .reel { margin-top: 56px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .card { background: var(--bg); padding: 30px 28px 32px; position: relative; transition: background .25s; }
+  .card:hover { background: var(--surface); }
+  .card .tc { font: 500 12px/1 var(--mono); color: var(--faint); display: flex; justify-content: space-between; }
+  .card h3 { font: 600 21px/1.25 var(--sans); letter-spacing: -0.01em; margin: 22px 0 12px; color: var(--white); }
+  .card ul { margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 15.5px; }
+  .card li { padding: 6px 0 6px 18px; position: relative; }
+  .card li::before { content: ""; position: absolute; left: 0; top: 15px; width: 8px; height: 1px; background: var(--faint); }
+  .card li b { color: var(--text); font-weight: 500; }
+
+  /* Big statement */
+  .statement { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .statement p {
+    font: 400 clamp(30px, 4.4vw, 54px)/1.12 var(--display); letter-spacing: -0.01em;
+    margin: 0; max-width: 22ch; color: var(--white);
+  }
+  .statement p em { color: var(--muted); }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 56px; }
+  .stat .n { font: 400 clamp(44px, 5vw, 64px)/1 var(--display); color: var(--white); }
+  .stat .l { color: var(--muted); font-size: 15px; margin-top: 8px; max-width: 28ch; }
+
+  /* 3D strip */
+  .modes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 36px; }
+  .chip { border: 1px solid var(--border); border-radius: 999px; padding: 9px 16px; font-size: 14.5px; color: var(--text); background: var(--surface); }
+  .chip.ana { background: linear-gradient(90deg, #ff3b3b33, #00e5ff33); border-color: #ffffff22; }
+
+  /* Keyboard */
+  .kbd-demo { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .palette { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: 0 30px 80px -30px #000; }
+  .palette .q { display: flex; align-items: center; gap: 10px; padding: 16px 18px; border-bottom: 1px solid var(--border); color: var(--text); font-size: 16px; }
+  .palette .q::before { content: "›"; color: var(--faint); font: 500 20px/1 var(--mono); }
+  .palette .caret { width: 1.5px; height: 18px; background: var(--white); animation: blink 1s steps(1) infinite; margin-left: -6px; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .palette .it { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; color: var(--muted); font-size: 15px; gap: 12px; }
+  .palette .it.sel { background: var(--surface3); color: var(--white); }
+  kbd { font: 500 12px/1 var(--mono); color: var(--text); background: var(--surface2); border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 6px; padding: 4px 7px; white-space: nowrap; }
+  .term { background: #000; border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; font: 400 14px/1.7 var(--mono); color: var(--muted); overflow-x: auto; }
+  .term .p { color: var(--faint); }
+  .term .c { color: var(--text); }
+
+  /* Downloads */
+  .dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+  .os {
+    display: flex; flex-direction: column; gap: 18px; padding: 28px; border-radius: 16px;
+    background: var(--surface); border: 1px solid var(--border); text-decoration: none;
+    transition: border-color .2s, transform .2s;
+  }
+  .os:hover { border-color: var(--faint); transform: translateY(-2px); }
+  .os svg { width: 30px; height: 30px; color: var(--white); }
+  .os h3 { margin: 0; font: 600 22px/1.2 var(--sans); color: var(--white); }
+  .os p { margin: 0; color: var(--muted); font-size: 15px; }
+  .os .fmt { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+  .os .fmt span { font: 500 12px/1 var(--mono); color: var(--text); background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; }
+  .note { color: var(--faint); font-size: 14.5px; margin-top: 24px; max-width: 80ch; }
+  .note code, .lede code { font: 500 .9em var(--mono); color: var(--text); }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--border); padding: 40px 0 56px; color: var(--faint); font-size: 14.5px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; align-items: center; }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--white); }
+  footer .links { display: flex; gap: 24px; flex-wrap: wrap; }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 960px) {
+    .hero-grid, .kbd-demo { grid-template-columns: 1fr; }
+    .reel, .dl { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    .reel, .dl, .stats { grid-template-columns: 1fr; }
+    .card { padding: 26px 22px; }
+    .row .hide { display: none; }
+    .timeline .tip { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .picture, .palette .caret { animation: none; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#"><img src="img/icon.png" alt="" width="28" height="28">GoPlay</a>
+    <nav>
+      <a class="opt" href="#features">Features</a>
+      <a class="opt" href="#casting">Casting</a>
+      <a href="#download">Download</a>
+      <a href="https://github.com/xmhrnx/goplay">Source</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow"><span class="rec"></span>For macOS · Windows · Linux</span>
+        <h1><img src="img/icon.png" alt="GoPlay icon" width="512" height="512">GoPlay</h1>
+        <p class="tagline">A video player for people who <em>just want to watch something</em> — with depth for those who want to tune everything.</p>
+        <p class="sub">It plays almost any file or stream with mpv's engine, in a quiet, near-black interface that gets out of the picture's way.</p>
+        <div class="ctas">
+          <a class="btn primary" href="https://github.com/xmhrnx/goplay/releases/latest">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14"/></svg>
+            Download
+          </a>
+          <a class="btn ghost" href="https://github.com/xmhrnx/goplay">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+            View source
+          </a>
+        </div>
+      </div>
+
+      <div class="screen reveal" aria-hidden="true">
+        <div class="bar"><i></i><i></i><i></i><span>GoPlay</span></div>
+        <div class="picture">
+          <div class="osd">1.5×</div>
+          <div class="subtitle">The video is the color.</div>
+        </div>
+        <div class="controls">
+          <div class="timeline">
+            <div class="buf"></div>
+            <div class="ab"></div>
+            <div class="pos"></div>
+            <div class="ch" style="left:18%"></div>
+            <div class="ch" style="left:46%"></div>
+            <div class="ch" style="left:71%"></div>
+            <div class="knob"></div>
+            <div class="tip">1:12:40 · Chapter 4</div>
+          </div>
+          <div class="row">
+            <span class="play"></span>
+            <span><b>51:08</b> / 2:01:44</span>
+            <span class="grow"></span>
+            <span class="hide">A–B</span>
+            <span class="hide">Subtitles</span>
+            <span>⌘K</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="reveal">
+        <span class="kicker">What it does</span>
+        <h2>Open it. <em>Press play.</em></h2>
+        <p class="lede">Everything below is in the box: no plugins to hunt for, no codec packs. The quiet interface stays out of the way until you want it.</p>
+      </div>
+
+      <div class="reel reveal">
+        <article class="card">
+          <div class="tc"><span>01</span><span>00:00:00</span></div>
+          <h3>Watching</h3>
+          <ul>
+            <li>Nearly every video and audio format, local or from a link — <b>YouTube, Vimeo, Twitch</b> and the other sites yt-dlp knows, plus HLS/DASH streams.</li>
+            <li><b>Hardware decoding</b> everywhere (VideoToolbox, D3D11, VA-API), drawn straight from the GPU.</li>
+            <li>Resumes where you left off; one episode queues the rest of the folder in natural order.</li>
+            <li>DVDs and Blu-rays from a drive, a disc folder or an <code>.iso</code>.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="tc"><span>02</span><span>00:12:30</span></div>
+          <h3>Controls</h3>
+          <ul>
+            <li>In a window, controls sit above and below the picture — <b>never over it</b>. Fullscreen, they float in from the edges.</li>
+            <li>Timeline with chapters, buffered ranges, an <b>A–B loop</b> and a preview under the pointer.</li>
+            <li>Speed from 0.25× to 4× with pitch kept, frame stepping, shuffle, go to a time.</li>
+            <li>Picture-in-picture and always on top.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="tc"><span>03</span><span>00:27:05</span></div>
+          <h3>Picture &amp; sound</h3>
+          <ul>
+            <li>Video, audio and subtitle tracks, a second subtitle line, external files.</li>
+            <li>Subtitle size, position, color, outline, delay and encoding.</li>
+            <li>Aspect, zoom, rotation, deinterlacing, debanding, smooth motion, <b>HDR tone mapping</b>.</li>
+            <li>Equalizer presets, loudness normalization, night mode, surround passthrough.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="tc"><span>04</span><span>00:41:52</span></div>
+          <h3>3D &amp; VR</h3>
+          <ul>
+            <li>Side-by-side and top-and-bottom 3D, shown as anaglyph, 2D, interleaved, checkerboard or passed to a 3D TV.</li>
+            <li><b>360° and VR180</b> video — equirectangular, fisheye, YouTube's cubemap: drag to look around.</li>
+            <li>Recognizes 3D and 360° files by name.</li>
+          </ul>
+        </article>
+        <article class="card" id="casting">
+          <div class="tc"><span>05</span><span>00:58:19</span></div>
+          <h3>Casting</h3>
+          <ul>
+            <li><b>Chromecast</b>, Google TV, Android TV and <b>DLNA/UPnP</b> renderers, found automatically.</li>
+            <li>Files the TV can't play are repackaged or converted on the fly with FFmpeg; subtitles go along.</li>
+            <li>Stop casting and pick up here where the TV left off.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="tc"><span>06</span><span>01:13:44</span></div>
+          <h3>Your network</h3>
+          <ul>
+            <li>Browse what DLNA/UPnP media servers share — a NAS, Plex, Emby, Jellyfin, Windows media sharing.</li>
+            <li>Play a single file or a whole folder.</li>
+            <li>A server that isn't found by itself can be added by its address.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="statement">
+    <div class="wrap">
+      <p class="reveal">Nothing runs unless something changed. <em>A paused player uses no CPU; during playback, frames are drawn at the video's own rate.</em></p>
+      <div class="stats reveal">
+        <div class="stat"><div class="n">~2.7%</div><div class="l">of one CPU core playing a 1080p H.264 file on Windows.</div></div>
+        <div class="stat"><div class="n">0</div><div class="l">copies: hardware-decoded frames stay on the GPU.</div></div>
+        <div class="stat"><div class="n">53</div><div class="l">interface languages, following your system or picked in Settings.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="reveal">
+        <span class="kicker">For power users</span>
+        <h2>Every knob, <em>if you want it.</em></h2>
+        <p class="lede">A command palette for every command, and every shortcut can be changed. Underneath, it's mpv: any mpv option in Settings or <code>mpv.conf</code>, <code>input.conf</code> bindings, and Lua or JavaScript scripts.</p>
+      </div>
+      <div class="kbd-demo reveal">
+        <div class="palette" aria-hidden="true">
+          <div class="q">sub<span class="caret"></span></div>
+          <div class="it sel"><span>Next Subtitle Track</span><kbd>⇧ C</kbd></div>
+          <div class="it"><span>Show Subtitles</span><kbd>C</kbd></div>
+          <div class="it"><span>Subtitles Later (+0.1 s)</span><kbd>X</kbd></div>
+          <div class="it"><span>Subtitles Earlier (−0.1 s)</span><kbd>Z</kbd></div>
+          <div class="it"><span>Load Subtitle File…</span><span></span></div>
+        </div>
+        <div>
+          <div class="term" aria-label="Command line example">
+            <div><span class="p">$</span> <span class="c">goplay --run=fullscreen,info movie.mkv</span></div>
+            <div class="p"># runs commands once the window is up</div>
+          </div>
+          <div class="modes">
+            <span class="chip"><kbd>Ctrl</kbd> <kbd>K</kbd> &nbsp;command palette</span>
+            <span class="chip">Media info panel</span>
+            <span class="chip">mpv log</span>
+            <span class="chip ana">Red/cyan anaglyph</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="download" style="border-top:1px solid var(--border)">
+    <div class="wrap">
+      <div class="reveal">
+        <span class="kicker">Download</span>
+        <h2>Get GoPlay.</h2>
+        <p class="lede">Each release is built and tested on macOS (Apple silicon), and on Windows and Linux for both x64 and ARM64.</p>
+      </div>
+      <div class="dl reveal">
+        <a class="os" href="https://github.com/xmhrnx/goplay/releases/latest">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.62c-.02-2.3 1.88-3.4 1.96-3.46-1.07-1.56-2.73-1.77-3.32-1.8-1.41-.14-2.76.83-3.47.83-.72 0-1.82-.81-3-.79-1.54.02-2.96.9-3.76 2.28-1.6 2.78-.41 6.9 1.15 9.16.76 1.1 1.67 2.34 2.86 2.3 1.15-.05 1.58-.74 2.97-.74 1.38 0 1.77.74 2.98.72 1.23-.02 2.01-1.12 2.76-2.23.87-1.28 1.23-2.52 1.25-2.58-.03-.01-2.4-.92-2.38-3.65ZM14.1 5.86c.63-.77 1.06-1.83.94-2.89-.91.04-2.02.61-2.67 1.37-.58.67-1.1 1.76-.96 2.8 1.02.08 2.06-.52 2.69-1.28Z"/></svg>
+          <h3>macOS</h3>
+          <p>Apple silicon. Drag GoPlay into Applications — libmpv is inside.</p>
+          <div class="fmt"><span>.dmg</span></div>
+        </a>
+        <a class="os" href="https://github.com/xmhrnx/goplay/releases/latest">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5 10 4.5v7H3v-6Zm0 13 7 1v-7H3v6Zm8 1.15L21 21v-8.5H11v7.15ZM11 4.35 21 3v8.5H11V4.35Z"/></svg>
+          <h3>Windows</h3>
+          <p>x64 and ARM64. An installer for the current user, or a portable folder.</p>
+          <div class="fmt"><span>-setup.exe</span><span>.zip</span></div>
+        </a>
+        <a class="os" href="https://github.com/xmhrnx/goplay/releases/latest">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5c-2.4 0-3.6 2-3.6 4.6 0 1.6.4 2.6-.6 4.2-1.2 1.9-3.3 4.3-3.3 6.6 0 1.1.6 1.6 1.4 1.6 1 0 1.8.9 3 1.6.9.5 1.9.4 3.1.4s2.2.1 3.1-.4c1.2-.7 2-1.6 3-1.6.8 0 1.4-.5 1.4-1.6 0-2.3-2.1-4.7-3.3-6.6-1-1.6-.6-2.6-.6-4.2 0-2.6-1.2-4.6-3.6-4.6Z"/><circle cx="10.4" cy="7.2" r=".7" fill="currentColor"/><circle cx="13.6" cy="7.2" r=".7" fill="currentColor"/></svg>
+          <h3>Linux</h3>
+          <p>x64 and ARM64. Packages that use your system's libmpv, or a tarball.</p>
+          <div class="fmt"><span>.deb</span><span>.rpm</span><span>.tar.gz</span></div>
+        </a>
+      </div>
+      <p class="note">Optional at runtime: <code>yt-dlp</code> for web pages, <code>FFmpeg</code> for casting files a TV can't play, and on Linux without a desktop portal, <code>zenity</code> for folder dialogs. To build it yourself, see the <a href="https://github.com/xmhrnx/goplay#building">README</a>.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>GoPlay · plays with <a href="https://mpv.io">mpv</a>, drawn with <a href="https://github.com/xmhrnx/giode">Giode</a></div>
+    <div class="links">
+      <a href="https://github.com/xmhrnx/goplay">Source on GitHub</a>
+      <a href="https://github.com/xmhrnx/goplay/releases">Releases</a>
+      <a href="https://github.com/xmhrnx/goplay/issues">Issues</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Fade sections in as they scroll into view.
+  (function () {
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+</body>
+</html>
