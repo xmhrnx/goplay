@@ -207,6 +207,14 @@
   .note { color: var(--faint); font-size: 14.5px; margin-top: 24px; max-width: 80ch; }
   .note code, .lede code { font: 500 .9em var(--mono); color: var(--text); }
 
+  /* Privacy */
+  .policy { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; margin-top: 48px; background: var(--border); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .policy > div { background: var(--bg); padding: 28px; }
+  .policy h3 { font: 600 19px/1.3 var(--sans); letter-spacing: -0.01em; margin: 0 0 10px; color: var(--white); }
+  .policy p { margin: 0 0 10px; color: var(--muted); font-size: 15.5px; }
+  .policy p:last-child { margin-bottom: 0; }
+  .policy code { font: 500 .9em var(--mono); color: var(--text); overflow-wrap: anywhere; }
+
   /* Footer */
   footer { border-top: 1px solid var(--border); padding: 40px 0 56px; color: var(--faint); font-size: 14.5px; }
   footer .wrap { display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; align-items: center; }
@@ -221,11 +229,13 @@
   @media (max-width: 960px) {
     .hero-grid, .kbd-demo { grid-template-columns: 1fr; }
     .reel, .dl { grid-template-columns: 1fr 1fr; }
+    .policy { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
     body { font-size: 16px; }
     .reel, .dl, .stats { grid-template-columns: 1fr; }
     .card { padding: 26px 22px; }
+    .policy > div { padding: 24px 22px; }
     .row .hide { display: none; }
     .timeline .tip { display: none; }
   }
@@ -443,6 +453,37 @@
       <p class="note">Optional at runtime: <code>yt-dlp</code> for web pages, <code>FFmpeg</code> for casting files a TV can't play, and on Linux without a desktop portal, <code>zenity</code> for folder dialogs. To build it yourself, see the <a href="https://github.com/xmhrnx/goplay#building">README</a>.</p>
     </div>
   </section>
+
+  <section id="privacy" style="border-top:1px solid var(--border)">
+    <div class="wrap">
+      <div class="reveal">
+        <span class="kicker">Privacy policy</span>
+        <h2>Your videos <em>stay yours.</em></h2>
+        <p class="lede">GoPlay has no accounts, ads, analytics, tracking or crash reporting, and it sends nothing to its developer. This policy covers GoPlay on macOS, Windows and Linux, wherever you got it: GitHub, the Mac App Store or the Microsoft Store.</p>
+      </div>
+      <div class="policy reveal">
+        <div>
+          <h3>What stays on your computer</h3>
+          <p>Your settings, the recent files list (up to 30 entries, with how far you got) and resume positions, network media servers you add by address, and your own <code>mpv.conf</code>, <code>input.conf</code> and scripts. They're kept in GoPlay's folder: <code>~/Library/Application Support/goplay</code> on macOS (inside the app's container in the Mac App Store version), <code>%AppData%\goplay</code> on Windows and <code>~/.config/goplay</code> on Linux.</p>
+          <p>Screenshots you take are saved in your Pictures folder. Clear Recent empties the list; deleting the folder removes everything.</p>
+        </div>
+        <div>
+          <h3>What goes over the network</h3>
+          <p>Only what you ask for. A link or stream you open is fetched straight from its site, which sees your IP address as with any download; web pages are read by yt-dlp if you've installed it.</p>
+          <p>Casting and network browsing stay on your local network: GoPlay looks for Chromecast, DLNA and media server devices there, and serves the file you cast to the device you chose. GoPlay doesn't check for updates or contact any server of its own.</p>
+        </div>
+        <div>
+          <h3>Who else gets data</h3>
+          <p>No one, from GoPlay. Sites you stream from, and the store you installed GoPlay from, have their own privacy policies; Apple and Microsoft may share anonymous install and crash statistics with the developer if you allowed that in your system settings.</p>
+        </div>
+        <div>
+          <h3>Children, changes and contact</h3>
+          <p>GoPlay collects no personal information from anyone, children included. If this policy changes, the new version will be on this page with a new date.</p>
+          <p>Questions: open an issue on <a href="https://github.com/xmhrnx/goplay/issues">GitHub</a>. Last updated November 19, 2026.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
@@ -452,6 +493,7 @@
       <a href="https://github.com/xmhrnx/goplay">Source on GitHub</a>
       <a href="https://github.com/xmhrnx/goplay/releases">Releases</a>
       <a href="https://github.com/xmhrnx/goplay/issues">Issues</a>
+      <a href="#privacy">Privacy</a>
     </div>
   </div>
 </footer>
