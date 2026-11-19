@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # Gathers what `giode build` left in dist/<platform> into out/ under
 # release names that say the system and CPU:
-#   macOS    GoPlay-<version>-macos-<arch>.dmg
-#   Windows  GoPlay-<version>-windows-<arch>-setup.exe, and the program
-#            with its DLLs as GoPlay-<version>-windows-<arch>.zip
+#   macOS    GoPlay-<version>-macos-<arch>.dmg, and the Mac App Store
+#            package as GoPlay-<version>-macos-<arch>-appstore.pkg when built
+#   Windows  GoPlay-<version>-windows-<arch>-setup.exe, the Microsoft
+#            Store package as GoPlay-<version>-windows-<arch>.msix, and the
+#            program with its DLLs as GoPlay-<version>-windows-<arch>.zip
 #   Linux    the .deb and .rpm as built, and the program with its files as
 #            GoPlay-<version>-linux-<arch>.tar.gz
 # The version is the release tag's ($GIODE_VERSION), or giode.toml's with
@@ -23,9 +25,13 @@ mkdir -p out
 case "$platform" in
 macos)
 	cp dist/macos/*.dmg "out/$name.dmg"
+	for pkg in dist/macos/appstore/*.pkg; do
+		if [ -e "$pkg" ]; then cp "$pkg" "out/$name-appstore.pkg"; fi
+	done
 	;;
 windows)
 	cp dist/windows/*-setup.exe "out/$name-setup.exe"
+	cp dist/windows/*.msix "out/$name.msix"
 	mkdir -p "out/$name"
 	cp dist/windows/*.exe dist/windows/*.dll "out/$name/"
 	rm -f "out/$name/"*-setup.exe
