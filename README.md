@@ -154,6 +154,10 @@ packages to it (`.github/workflows/build.yml`):
 | Windows | `-setup.exe`, for the current user | `.zip`, libmpv and ANGLE next to `GoPlay.exe` |
 | Linux | `.deb` and `.rpm`, using the system's libmpv | `.tar.gz` |
 
+Each release also gets the Microsoft Store's `.msix` packages and, with the
+Apple secrets set, a signed and notarized `.dmg` and the Mac App Store's
+`.pkg`. [RELEASING.md](RELEASING.md) covers the secrets and the stores.
+
 GoPlay opens video and audio files from the file manager's "Open with", and
 adds "Play with GoPlay" to its context menu: a Finder Quick Action on macOS
 (once GoPlay is in Applications and has run once), an Explorer entry from the
