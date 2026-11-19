@@ -17,10 +17,11 @@ id = "com.mehran9675.goplay"
 version = "1.1.0"
 build = 2
 icon = "assets/icon.png"
+splash_color = "#09090b"
 package = "."
 publisher = "Mehran Zahiroddini"
 description = "A fast, beautiful video player that plays almost anything."
-website = "https://github.com/xmhrnx/goplay"
+website = "https://xmhrnx.github.io/goplay/"
 renderer = "opengl"
 ldflags = "-X github.com/mehran9675/goplay/internal/app.Version={version}"
 
@@ -31,6 +32,7 @@ min_os = 11
 local_network = "GoPlay looks for Chromecast and DLNA devices on your network so you can cast to them."
 
 [macos.plist]
+LSApplicationCategoryType = "public.app-category.video"
 NSBonjourServices = ["_googlecast._tcp"]
 
 [windows]
