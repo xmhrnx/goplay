@@ -19,6 +19,9 @@ build = 2
 icon = "assets/icon.png"
 splash_color = "#09090b"
 package = "."
+# Desktop only: libmpv (through cgo), its OpenGL render API under Giode's
+# underlay, and desktop dialogs. Android and iOS would need another engine.
+platforms = ["macos", "windows", "linux"]
 publisher = "Mehran Zahiroddini"
 description = "A fast, beautiful video player that plays almost anything."
 website = "https://xmhrnx.github.io/goplay/"
@@ -32,8 +35,30 @@ min_os = 11
 local_network = "GoPlay looks for Chromecast and DLNA devices on your network so you can cast to them."
 
 [macos.plist]
-LSApplicationCategoryType = "public.app-category.video"
+LSApplicationCategoryType = "public.app-category.video"   # the Mac App Store requires it
 NSBonjourServices = ["_googlecast._tcp"]
+# Only HTTPS and other standard protocols, through macOS and libmpv/FFmpeg
+# (for streams): no export documentation needed for each upload.
+ITSAppUsesNonExemptEncryption = false
+
+# The Mac App Store build (giode build mas). The release workflow writes
+# the profile from the MACOS_PROFILE_BASE64 secret and points
+# $GIODE_MACOS_STORE_PROFILE at it; keep the file out of git.
+# In the sandbox GoPlay plays what the user opens (files, folders, links)
+# but can't run yt-dlp or FFmpeg; see RELEASING.md.
+[macos.store]
+entitlements = [
+  "network.client",                 # streams, web links, Chromecast and DLNA control, network media servers
+  "network.server",                 # the HTTP server casting devices fetch local files from; SSDP replies
+  "files.user-selected.read-only",  # files and folders opened, dropped or chosen in Open Folder
+  "assets.pictures.read-write",     # screenshots go to Pictures
+  "cs.allow-jit",                   # libmpv's LuaJIT (its built-in scripts), as in the Developer ID build
+]
+
+# PrivacyInfo.xcprivacy for the Mac App Store. GoPlay sends nothing to its
+# developer: no accounts, analytics, crash reports or tracking.
+[privacy]
+tracking = false
 
 [windows]
 arch = "amd64"
@@ -42,6 +67,20 @@ cc = "cc"
 [windows.installer]
 per_machine = false
 desktop_shortcut = true
+# Casting: TVs and Chromecasts fetch the file from GoPlay's own HTTP server
+# (on a random port), so it needs an inbound rule on private networks. The
+# MSIX declares the same rule in its manifest.
+firewall = true
+
+# The Microsoft Store package (giode build msix). The Store signs it.
+# identity_name and publisher must match Partner Center → GoPlay →
+# Product identity once the name is reserved (Package/Identity/Name and
+# Package/Identity/Publisher); publisher_display_name is
+# Package/Properties/PublisherDisplayName.
+[windows.msix]
+identity_name = "MehranZahir.GoPlay"
+publisher = "CN=B40E8F57-A7E0-40BB-8E74-5D051D0B578B"
+publisher_display_name = "Mehran Zahiroddini"
 
 [linux]
 categories = ["AudioVideo", "Video", "Player"]
